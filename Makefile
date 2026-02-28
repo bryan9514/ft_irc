@@ -6,7 +6,7 @@
 #    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/02/28 12:21:24 by brturcio         ###   ########.fr        #
+#    Updated: 2026/02/28 16:45:01 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ DIR_SRCS_B	:= sources/bonus/
 DIR_OBJS_M	:= objs/mandatory/
 DIR_OBJS_B	:= objs/bonus/
 
-M_SOURCES	:= main.cpp test.cpp
+M_SOURCES	:= main.cpp Server.cpp
 B_SOURCES	:= main_bonus.cpp test_bonus.cpp
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))

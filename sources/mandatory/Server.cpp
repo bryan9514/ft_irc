@@ -6,8 +6,8 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/02/28 14:58:14 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/02/28 16:48:25 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_irc"
+// #include "ft_irc.hpp"

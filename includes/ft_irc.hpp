@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 10:34:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/02/28 16:30:34 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/02/28 16:47:37 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,6 @@
 # define FT_IRC
 
 #include "Server.hpp"
+void	printttt(void);
 
 #endif

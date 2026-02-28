@@ -6,13 +6,16 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 11:00:10 by brturcio          #+#    #+#             */
-/*   Updated: 2026/02/28 16:40:55 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/02/28 16:46:42 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
+#include <iostream>
+
 
 int	main(void)
 {
+	std::cout << "this is a test\n";
 	return (0);
 }
