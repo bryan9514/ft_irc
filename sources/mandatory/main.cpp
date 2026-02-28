@@ -6,16 +6,26 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 11:00:10 by brturcio          #+#    #+#             */
-/*   Updated: 2026/02/28 16:46:42 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/02/28 18:56:47 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_irc.hpp"
+#include "Server.hpp"
+#include <stdlib.h>
+#include <exception>
 #include <iostream>
 
 
-int	main(void)
+int	main(int ac, char **av)
 {
-	std::cout << "this is a test\n";
+	if (ac != 3)
+		return (1);
+	try {
+		Server	s(std::atoi(av[1]), av[2]);
+
+		s.
+	} catch (std::exception & e) {
+		std::cout << e.what() << std::endl;
+	}
 	return (0);
 }
