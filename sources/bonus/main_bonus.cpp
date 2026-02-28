@@ -6,14 +6,14 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 11:00:10 by brturcio          #+#    #+#             */
-/*   Updated: 2026/02/27 11:00:43 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/02/28 10:36:16 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
+#include "test.hpp"
 
 int	main(void)
 {
-	std::cout << "esto es un test\n";
+	printttt();
 	return (0);
 }

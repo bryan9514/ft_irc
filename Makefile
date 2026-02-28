@@ -6,97 +6,77 @@
 #    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/02/27 11:58:02 by brturcio         ###   ########.fr        #
+#    Updated: 2026/02/28 11:43:36 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# NAME        := ircserv
-# CC          := c++
-# CFLAGS      := -Wall -Wextra -Werror -std=c++98
-#
-# DIR_SRCS    := sources/
-# DIR_OBJS    := objs/
-#
-# SOURCES     := main.cpp
-# OBJECTS     := $(addprefix $(DIR_OBJS), $(SOURCES:.cpp=.o))
-#
-# INCLUDES    := -Iincludes
-#
-# GREEN       := \033[0;32m
-# RESET       := \033[0m
-#
-# TOTAL       := $(words $(SOURCES))
-# COUNT       := 0
-#
-# all: $(NAME)
-#
-# $(DIR_OBJS)%.o: $(DIR_SRCS)%.cpp
-# 	@mkdir -p $(DIR_OBJS)
-# 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-# 	@$(eval COUNT=$(shell echo $$(( $(COUNT) + 1 ))))
-# 	@printf "$(GREEN)[%d%%]$(RESET) Compiling %s\n" $$(( $(COUNT) * 100 / $(TOTAL) )) $<
-#
-# $(NAME): $(OBJECTS)
-# 	@$(CC) $(CFLAGS) $(OBJECTS) -o $(NAME)
-# 	@echo "$(GREEN)✔ $(NAME) Created Successfully!$(RESET)"
-#
-# clean:
-# 	@rm -rf $(DIR_OBJS)
-# 	@echo "$(GREEN)✔ Objects Cleaned$(RESET)"
-#
-# fclean: clean
-# 	@rm -rf $(NAME)
-# 	@echo "$(GREEN)✔ Executable Cleaned$(RESET)"
-#
-# re: fclean all
-#
-# .PHONY: all clean fclean re
+NAME		:= ircserv
+BONUS		:= ircserv_bonus
+CC			:= c++
+CFLAGS		:= -Wall -Wextra -Werror -std=c++98
 
+DIR_SRCS_M	:= sources/mandatory/
+DIR_SRCS_B	:= sources/bonus/
 
-NAME        := ircserv
-CC          := c++
-CFLAGS      := -Wall -Wextra -Werror -std=c++98
+DIR_OBJS_M	:= objs/mandatory/
+DIR_OBJS_B	:= objs/bonus/
 
-DIR_SRCS    := sources/
-DIR_OBJS    := objs/
+M_SOURCES	:= main.cpp test.cpp
+B_SOURCES	:= main_bonus.cpp test_bonus.cpp
 
-SOURCES     := main.cpp
-OBJECTS     := $(addprefix $(DIR_OBJS), $(SOURCES:.cpp=.o))
+M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))
+B_OBJECTS	:= $(addprefix $(DIR_OBJS_B), $(B_SOURCES:.cpp=.o))
 
-INCLUDES    := -Iincludes
+INCLUDES	:= -Iincludes
 
-TPUT    := tput -T xterm-256color
-_RESET  := $(shell $(TPUT) sgr0)
-_BOLD   := $(shell $(TPUT) bold)
-_GREEN  := $(shell $(TPUT) setaf 2)
-_PURPLE := $(shell $(TPUT) setaf 5)
+TPUT  := tput -T xterm-256color
+RESET := $(shell $(TPUT) sgr0)
+GREEN := $(shell printf '\033[38;5;40m')
+BLUE  := $(shell printf '\033[38;5;81m')
 
-TOTAL   := $(words $(SOURCES))
-COUNT   := 0
+M_TOTAL		:= $(words $(M_SOURCES))
+M_COUNT		:= 0
+B_TOTAL		:= $(words $(B_SOURCES))
+B_COUNT		:= 0
 
 all: $(NAME)
 
-$(DIR_OBJS)%.o: $(DIR_SRCS)%.cpp
-	@mkdir -p $(DIR_OBJS)
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-	@$(eval COUNT=$(shell echo $$(( $(COUNT) + 1 ))))
-	@printf "$(_GREEN)($(_BOLD)%3d%%$(_RESET)$(_GREEN)) $(_RESET)compiling $(_BOLD)$(_PURPLE)%s$(_RESET)\n" \
-	$$(( $(COUNT) * 100 / $(TOTAL) )) $<
+bonus: $(BONUS)
 
-$(NAME): $(OBJECTS)
-	@$(CC) $(CFLAGS) $(OBJECTS) -o $(NAME)
-	@printf "$(_BOLD)$(NAME)$(_RESET) created $(_GREEN)$(_BOLD)successfully ✔$(_RESET)\n"
+$(DIR_OBJS_M)%.o: $(DIR_SRCS_M)%.cpp
+	@mkdir -p $(DIR_OBJS_M)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(eval M_COUNT=$(shell echo $$(( $(M_COUNT) + 1 ))))
+	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \
+	$$(( $(M_COUNT) * 100 / $(M_TOTAL) )) $<
+
+$(DIR_OBJS_B)%.o: $(DIR_SRCS_B)%.cpp
+	@mkdir -p $(DIR_OBJS_B)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(eval B_COUNT=$(shell echo $$(( $(B_COUNT) + 1 ))))
+	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \
+	$$(( $(B_COUNT) * 100 / $(B_TOTAL) )) $<
+
+$(NAME): $(M_OBJECTS)
+	@$(CC) $(CFLAGS) $(M_OBJECTS) -o $(NAME)
+	@printf "$(GREEN)$(NAME) created successfully ✔$(RESET)\n"
+
+$(BONUS): $(B_OBJECTS)
+	@$(CC) $(CFLAGS) $(B_OBJECTS) -o $(BONUS)
+	@printf "$(GREEN)$(BONUS) created successfully ✔$(RESET)\n"
 
 clean:
-	@rm -rf $(DIR_OBJS)
-	@printf "$(_BOLD)Objects$(_RESET) $(_GREEN)cleaned ✔$(_RESET)\n\n"
+	@rm -rf objs
+	@printf "$(GREEN)Objects cleaned ✔$(RESET)\n"
 
 fclean: clean
-	@rm -rf $(NAME)
-	@printf "$(_BOLD)$(NAME)$(_RESET) $(_GREEN)cleaned ✔$(_RESET)\n\n"
+	@rm -rf $(NAME) $(BONUS)
+	@printf "$(GREEN)Binaries cleaned ✔$(RESET)\n"
 
 re: fclean all
 
-.PHONY: all clean fclean re
+rebonus: fclean bonus
+
+.PHONY: all clean fclean re bonus rebonus
 
 
