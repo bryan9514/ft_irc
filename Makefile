@@ -6,7 +6,7 @@
 #    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/02/28 11:43:36 by brturcio         ###   ########.fr        #
+#    Updated: 2026/02/28 12:21:24 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME) $(BONUS)
-	@printf "$(GREEN)Binaries cleaned ✔$(RESET)\n"
+	@printf "$(GREEN)Executables cleaned ✔$(RESET)\n"
 
 re: fclean all
 
