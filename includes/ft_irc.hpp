@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.hpp                                           :+:      :+:    :+:   */
+/*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 10:34:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/02/28 10:35:00 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/02/28 16:30:34 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TEST_HPP
-# define TEST_HPP
+#ifndef FT_IRC
+# define FT_IRC
 
-void	printttt(void);
-
+#include "Server.hpp"
 
 #endif
