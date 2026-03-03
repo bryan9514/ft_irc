@@ -6,13 +6,14 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/03 17:50:16 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/03 21:47:38 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "ft_irc.hpp"
 /* for exception runtime_error */
+#include <cerrno>
 #include <stdexcept>
 #include <sys/poll.h>
 #include <sys/socket.h>
@@ -65,20 +66,36 @@ void	Server::bindSocket(void)
 
 void	Server::listenSocket(void)
 {
+	struct	pollfd	newPoll;
+
 	if (listen(_serSocketFd, SOMAXCONN) != 0)
 		throw std::runtime_error("Error: listen failed");
 	std::cout << SUCCESS << "[SERVER] listening on SERV_PORT: " << _port << RST << std::endl;
+	newPoll.fd = _serSocketFd;
+	newPoll.events = POLLIN;
+	newPoll.revents = 0;
+	_pollFds.push_back(newPoll);
 }
 
 /* ==================== private methods for runServer ======================= */
-void	Server::pollFds(void)
-{
-	
-}
+// void	Server::pollFds(void)
+// {
+//
+//
+// }
 
 void	Server::acceptClient(void)
 {
+	struct sockaddr_in	clientAddress;
+	socklen_t			lenClientAddress = sizeof(clientAddress);
 
+	int acceptFd = accept(_serSocketFd, (sockaddr*)&(clientAddress), &lenClientAddress);
+	if (acceptFd == -1 && errno == EAGAIN)
+		return ;
+	if (acceptFd == -1)
+		throw std::runtime_error("Error: accept failed");
+	if (fcntl(acceptFd, F_SETFL, O_NONBLOCK) == -1)
+		throw std::runtime_error("Error: fcntl failed");
 }
 
 
@@ -94,16 +111,18 @@ void	Server::initServer(void)
 
 void	Server::runServer(void)
 {
-	pollFds();
+	std::cout << SUCCESS << "[SERVER] > Connected" << RST << std::endl;
+	std::cout << SUCCESS << "[SERVER] Waiting to accept a connection..." << RST << std::endl;
+
 	while (1) {
-		if((poll(&_pollFds[0],_pollFds.size(),-1) == -1) != 0)
+		if(poll(&_pollFds[0],_pollFds.size(),-1) == -1)
 			throw std::runtime_error("Error: poll failed");
 		for (size_t i = 0; i < _pollFds.size(); i++)
 			if (_pollFds[i].revents & POLLIN) {
 				if (_pollFds[i].fd == _serSocketFd)
 					acceptClient();
-				else
-					handleClientData();
+				//else
+				//	handleClientData();
 			}
 	}
 }
