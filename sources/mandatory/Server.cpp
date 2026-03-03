@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/02/28 18:00:23 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/02 16:14:02 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ Server::Server(int port, const std::string& pass) :
 	_port(port),
 	_serSocketFd(-1),
 	_pass(pass),
+	//_clients(),
 	_pollFds()
 {}
 
