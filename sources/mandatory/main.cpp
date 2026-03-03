@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 11:00:10 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/03 17:03:39 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/03 22:34:44 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int ac, char **av)
 		Server	s(std::atoi(av[1]), av[2]);
 
 		s.initServer();
-		//s.runServer();
+		s.runServer();
 
 	} catch (std::exception & e) {
 		std::cout << ERROR << e.what() << RST<< std::endl;

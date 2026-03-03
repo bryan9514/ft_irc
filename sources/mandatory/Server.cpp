@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/03 21:47:38 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/03 22:08:23 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,18 +86,27 @@ void	Server::listenSocket(void)
 
 void	Server::acceptClient(void)
 {
-	struct sockaddr_in	clientAddress;
-	socklen_t			lenClientAddress = sizeof(clientAddress);
+	while (true)
+	{
+		struct sockaddr_in	clientAddress;
+		socklen_t			lenClientAddress = sizeof(clientAddress);
 
-	int acceptFd = accept(_serSocketFd, (sockaddr*)&(clientAddress), &lenClientAddress);
-	if (acceptFd == -1 && errno == EAGAIN)
-		return ;
-	if (acceptFd == -1)
-		throw std::runtime_error("Error: accept failed");
-	if (fcntl(acceptFd, F_SETFL, O_NONBLOCK) == -1)
-		throw std::runtime_error("Error: fcntl failed");
+		int acceptFd = accept(_serSocketFd, (sockaddr*)&(clientAddress), &lenClientAddress);
+		if (acceptFd == -1) {
+			if (errno == EAGAIN || errno == EWOULDBLOCK)
+				break ;
+			throw std::runtime_error("Error: accept failed");
+		}
+		if (fcntl(acceptFd, F_SETFL, O_NONBLOCK) == -1)
+			throw std::runtime_error("Error: fcntl failed");
+		struct pollfd newPoll;
+		newPoll.fd = acceptFd;
+		newPoll.events = POLLIN;
+		newPoll.revents = 0;
+		_pollFds.push_back(newPoll);
+		std::cout << SUCCESS << "[SERVER] New client connected (fd: " << acceptFd << ")" << RST << std::endl;
+	}
 }
-
 
 /* ============================ public methods ============================== */
 void	Server::initServer(void)
