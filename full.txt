@@ -1,0 +1,297 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
+#    Updated: 2026/03/03 16:41:59 by brturcio         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME		:= ircserv
+BONUS		:= ircserv_bonus
+CC			:= c++
+CFLAGS		:= -Wall -Wextra -Werror -std=c++98
+
+DIR_SRCS_M	:= sources/mandatory/
+DIR_SRCS_B	:= sources/bonus/
+
+DIR_OBJS_M	:= objs/mandatory/
+DIR_OBJS_B	:= objs/bonus/
+
+M_SOURCES	:= main.cpp Server.cpp
+B_SOURCES	:= 
+
+M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))
+B_OBJECTS	:= $(addprefix $(DIR_OBJS_B), $(B_SOURCES:.cpp=.o))
+
+INCLUDES	:= -Iincludes
+
+TPUT  := tput -T xterm-256color
+RESET := $(shell $(TPUT) sgr0)
+GREEN := $(shell printf '\033[38;5;40m')
+BLUE  := $(shell printf '\033[38;5;81m')
+
+M_TOTAL		:= $(words $(M_SOURCES))
+M_COUNT		:= 0
+B_TOTAL		:= $(words $(B_SOURCES))
+B_COUNT		:= 0
+
+all: $(NAME)
+
+bonus: $(BONUS)
+
+$(DIR_OBJS_M)%.o: $(DIR_SRCS_M)%.cpp
+	@mkdir -p $(DIR_OBJS_M)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(eval M_COUNT=$(shell echo $$(( $(M_COUNT) + 1 ))))
+	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \
+	$$(( $(M_COUNT) * 100 / $(M_TOTAL) )) $<
+
+$(DIR_OBJS_B)%.o: $(DIR_SRCS_B)%.cpp
+	@mkdir -p $(DIR_OBJS_B)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(eval B_COUNT=$(shell echo $$(( $(B_COUNT) + 1 ))))
+	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \
+	$$(( $(B_COUNT) * 100 / $(B_TOTAL) )) $<
+
+$(NAME): $(M_OBJECTS)
+	@$(CC) $(CFLAGS) $(M_OBJECTS) -o $(NAME)
+	@printf "$(GREEN)$(NAME) created successfully ✔$(RESET)\n"
+
+$(BONUS): $(B_OBJECTS)
+	@$(CC) $(CFLAGS) $(B_OBJECTS) -o $(BONUS)
+	@printf "$(GREEN)$(BONUS) created successfully ✔$(RESET)\n"
+
+clean:
+	@rm -rf objs
+	@printf "$(GREEN)Objects cleaned ✔$(RESET)\n"
+
+fclean: clean
+	@rm -rf $(NAME) $(BONUS)
+	@printf "$(GREEN)Executables cleaned ✔$(RESET)\n"
+
+re: fclean all
+
+rebonus: fclean bonus
+
+.PHONY: all clean fclean re bonus rebonus
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/27 11:00:10 by brturcio          #+#    #+#             */
+/*   Updated: 2026/03/03 17:03:39 by brturcio         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "ft_irc.hpp"
+#include "Server.hpp"
+#include <stdlib.h>
+#include <exception>
+#include <iostream>
+
+
+int	main(int ac, char **av)
+{
+	if (ac != 3) {
+		std::cout << ERROR << "incorrect number of arguments" << RST << std::endl;
+		return (1);
+	}
+	try {
+		Server	s(std::atoi(av[1]), av[2]);
+
+		s.initServer();
+		//s.runServer();
+
+	} catch (std::exception & e) {
+		std::cout << ERROR << e.what() << RST<< std::endl;
+	}
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
+/*   Updated: 2026/03/03 17:16:15 by brturcio         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Server.hpp"
+#include "ft_irc.hpp"
+/* for exception runtime_error */
+#include <stdexcept>
+#include <sys/socket.h>
+/* for fcntl */
+#include <fcntl.h>
+#include <iostream>
+
+/* ======================== parameter constructor =========================== */
+Server::Server(int port, const std::string& pass) :
+	_port(port),
+	_serSocketFd(-1),
+	_pass(pass),
+	//_clients(),
+	_pollFds()
+{}
+
+/* ================================ destructor ============================== */
+Server::~Server(void)
+{}
+
+/* ================== private methods for createSocket ====================== */
+void	Server::createSocket(void)
+{
+	_serSocketFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (_serSocketFd == -1)
+		throw std::runtime_error("Error: socket creation failed");
+	std::cout << SUCCESS <<"[SERVER] socket successfuly created" << RST << std::endl;
+}
+
+void	Server::configureSocket(void)
+{
+	_socketAddress.sin_family = AF_INET;
+	_socketAddress.sin_port = htons(_port);;
+	_socketAddress.sin_addr.s_addr = INADDR_ANY;
+}
+
+void	Server::setSocketOptions(void)
+{
+    int yes = 1;
+    if (setsockopt(_serSocketFd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1)
+        throw std::runtime_error("Error: setsockopt failed");
+}
+
+void	Server::bindSocket(void)
+{
+	if (bind(_serSocketFd, (struct sockaddr *)&_socketAddress, sizeof(_socketAddress)) != 0)
+		throw std::runtime_error("Error: socket bind failed");
+	std::cout << SUCCESS << "[SERVER] socket successfuly binded" << RST << std::endl;
+}
+
+void	Server::listenSocket(void)
+{
+	if (listen(_serSocketFd, SOMAXCONN) != 0)
+		throw std::runtime_error("Error: listen failed");
+	std::cout << SUCCESS << "[SERVER] listening on SERV_PORT: " << _port << RST << std::endl;
+}
+
+/* ==================== private methods for runServer ======================= */
+void	Server::pollServer(void)
+{
+	
+}
+
+/* ============================ public methods ============================== */
+void	Server::initServer(void)
+{
+	createSocket();
+	configureSocket();
+	setSocketOptions();
+	bindSocket();
+	listenSocket();
+}
+
+void	Server::runServer(void)
+{
+	while (1) {
+		pollServer();
+
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_irc.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 10:34:12 by brturcio          #+#    #+#             */
+/*   Updated: 2026/03/03 17:02:11 by brturcio         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FT_IRC
+# define FT_IRC
+
+# define RST "\033[0m"
+# define ERROR "\033[0;91m"
+# define WARNING "\033[0;93m"
+# define SUCCESS "\033[0;92m"
+# define INFO "\033[0;96m"
+# define INP "\033[0;94m"
+
+#endif
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
+/*   Updated: 2026/03/03 17:08:01 by brturcio         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SERVER_HPP
+# define SERVER_HPP
+
+/* For sorcket, bind, listen,   */
+#include <sys/types.h>
+#include <sys/socket.h>
+
+/* For poll */
+#include <poll.h>
+
+/* For struct sockaddr_in */
+#include <netinet/in.h>
+
+/* For containers */
+#include <string>
+#include <vector>
+//#include <map>
+
+class Server
+{
+private:
+	int						_port;
+	int						_serSocketFd;
+	std::string				_pass;
+	//std::map<int, Client>		_clients;
+	std::vector<pollfd>		_pollFds;
+	struct sockaddr_in 		_socketAddress;
+
+	void	createSocket(void);
+	void	configureSocket(void);
+	void	setSocketOptions(void);
+	void	bindSocket(void);
+	void	listenSocket(void);
+	
+	void	pollServer(void);
+	void	acceptClient(void);
+	void	handleClientData(int fd);
+	void	removeClient(int fd);
+
+public:
+	Server(int port, const std::string& pass);
+	~Server(void);
+
+	void	initServer();
+	void	runServer();
+
+};
+
+#endif
+
