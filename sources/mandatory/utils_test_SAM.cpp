@@ -23,8 +23,21 @@ std::vector<std::string>	Tokenizer(std::string& line)
 	return (token);
 }
 
-int		handleCmd(/*Client &Client,*/ std::string& cmd)
+int		handleCmd(/*Client &Client,*/ std::string& buffer)
 {
-	std::vector<std::string> splited = this->Tokenizer(cmd);
+	std::vector<std::string> splitted = this->Tokenizer(buffer);
 	unsigned int size = splited.size();
+	if (!size)
+		return (0);
+	std::cout << "Buffer Splitted ( " << size << " ) : ";
+	for(unsigned int i = 0; i < size; i++) 
+	{
+		if (!splitted[i].empty())
+			std::cout << "\"" << splited[i] << "\"" << " ";
+	}
+	std::cout << std::endl;
+//	std::string commands[??] = { "NICK" , "TOPIC" , "JOIN", "KICK", "INVITE", "PRIVMSG" , "QUIT" ...}
+//	for (int i = 0; i <= ??; i++)
+//		if (splitted[i] == commands[i])
+//			break;
 }
