@@ -6,7 +6,7 @@
 #    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/03/03 16:41:59 by brturcio         ###   ########.fr        #
+#    Updated: 2026/03/04 11:51:27 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ INCLUDES	:= -Iincludes
 
 TPUT  := tput -T xterm-256color
 RESET := $(shell $(TPUT) sgr0)
-GREEN := $(shell printf '\033[38;5;40m')
+GREEN := $(shell printf '\033[38;5;10m')
 BLUE  := $(shell printf '\033[38;5;81m')
 
 M_TOTAL		:= $(words $(M_SOURCES))

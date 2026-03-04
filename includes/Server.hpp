@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/03 17:50:16 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/04 10:41:40 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@
 /* For containers */
 #include <string>
 #include <vector>
-//#include <map>
+#include <map>
+
+class Client;
 
 class Server
 {
@@ -34,7 +36,7 @@ private:
 	int						_port;
 	int						_serSocketFd;
 	std::string				_pass;
-	//std::map<int, Client>		_clients;
+	std::map<int, Client>	_clients;
 	std::vector<pollfd>		_pollFds;
 	struct sockaddr_in 		_socketAddress;
 

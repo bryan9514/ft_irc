@@ -6,12 +6,13 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/03 22:08:23 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/04 11:42:52 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "ft_irc.hpp"
+#include "Client.hpp"
 /* for exception runtime_error */
 #include <cerrno>
 #include <stdexcept>
@@ -19,6 +20,8 @@
 #include <sys/socket.h>
 /* for fcntl */
 #include <fcntl.h>
+/* for close */
+#include <unistd.h>
 #include <iostream>
 
 /* ======================== parameter constructor =========================== */
@@ -37,15 +40,18 @@ Server::~Server(void)
 /* ================== private methods for createSocket ====================== */
 void	Server::createSocket(void)
 {
-	_serSocketFd = socket(AF_INET, SOCK_STREAM, 0);
+	_serSocketFd = socket(AF_INET, SOCK_STREAM, 0); //socket creation
 	if (_serSocketFd == -1)
 		throw std::runtime_error("Error: socket creation failed");
 	std::cout << SUCCESS <<"[SERVER] socket successfuly created" << RST << std::endl;
+	if (fcntl(_serSocketFd, F_SETFL, O_NONBLOCK) == -1) // put it in non-blocking
+		throw std::runtime_error("Error: fcntl failed");
 }
 
 void	Server::configureSocket(void)
 {
-	_socketAddress.sin_family = AF_INET;
+	// Configure the server address:
+	_socketAddress.sin_family = AF_INET; 
 	_socketAddress.sin_port = htons(_port);;
 	_socketAddress.sin_addr.s_addr = INADDR_ANY;
 }
@@ -53,6 +59,7 @@ void	Server::configureSocket(void)
 void	Server::setSocketOptions(void)
 {
     int yes = 1;
+    // to use the port, without having to wait for TIME_WAIT
     if (setsockopt(_serSocketFd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1)
         throw std::runtime_error("Error: setsockopt failed");
 }
@@ -78,18 +85,13 @@ void	Server::listenSocket(void)
 }
 
 /* ==================== private methods for runServer ======================= */
-// void	Server::pollFds(void)
-// {
-//
-//
-// }
-
 void	Server::acceptClient(void)
 {
 	while (true)
 	{
 		struct sockaddr_in	clientAddress;
 		socklen_t			lenClientAddress = sizeof(clientAddress);
+		Client					newClient;
 
 		int acceptFd = accept(_serSocketFd, (sockaddr*)&(clientAddress), &lenClientAddress);
 		if (acceptFd == -1) {
@@ -103,9 +105,38 @@ void	Server::acceptClient(void)
 		newPoll.fd = acceptFd;
 		newPoll.events = POLLIN;
 		newPoll.revents = 0;
-		_pollFds.push_back(newPoll);
+		_pollFds.push_back(newPoll); // add the Poll inside the map container
+		newClient.setFdClient(acceptFd);
+		_clients.insert(std::pair<int, Client>(acceptFd, newClient));
 		std::cout << SUCCESS << "[SERVER] New client connected (fd: " << acceptFd << ")" << RST << std::endl;
 	}
+}
+
+void Server::removeClient(int fd)
+{
+	close(fd);
+
+	for (size_t i = 0; i < _pollFds.size(); i++) {
+		if (_pollFds[i].fd == fd) {
+			_pollFds.erase(_pollFds.begin() + i);
+			break;
+		}
+	}
+	std::cout << INFO << "[SERVER] client disconnected fd: " << fd << RST << std::endl;
+}
+
+void Server::handleClientData(int fd)
+{
+	char buffer[512];
+	int bytes = recv(fd, buffer, sizeof(buffer) - 1, 0);
+	
+	if (bytes <= 0) {
+		removeClient(fd);
+		return ;
+	}
+	buffer[bytes] = '\0';
+	std::string message(buffer);
+	std::cout << INFO << "[CLIENT " << fd << "] " << message << RST << std::endl;
 }
 
 /* ============================ public methods ============================== */
@@ -120,7 +151,6 @@ void	Server::initServer(void)
 
 void	Server::runServer(void)
 {
-	std::cout << SUCCESS << "[SERVER] > Connected" << RST << std::endl;
 	std::cout << SUCCESS << "[SERVER] Waiting to accept a connection..." << RST << std::endl;
 
 	while (1) {
@@ -130,8 +160,8 @@ void	Server::runServer(void)
 			if (_pollFds[i].revents & POLLIN) {
 				if (_pollFds[i].fd == _serSocketFd)
 					acceptClient();
-				//else
-				//	handleClientData();
+				else
+					handleClientData(_pollFds[i].fd);
 			}
 	}
 }
