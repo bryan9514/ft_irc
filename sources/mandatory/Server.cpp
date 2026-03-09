@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/04 11:42:52 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/09 19:16:31 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ void Server::removeClient(int fd)
 {
 	close(fd);
 
+	_clients.erase(fd);
 	for (size_t i = 0; i < _pollFds.size(); i++) {
 		if (_pollFds[i].fd == fd) {
 			_pollFds.erase(_pollFds.begin() + i);
@@ -134,6 +135,7 @@ void Server::handleClientData(int fd)
 		removeClient(fd);
 		return ;
 	}
+	//_clients[fd].buffer += message; me falta meter el mensaje completo en el buffer del cliente
 	buffer[bytes] = '\0';
 	std::string message(buffer);
 	std::cout << INFO << "[CLIENT " << fd << "] " << message << RST << std::endl;
