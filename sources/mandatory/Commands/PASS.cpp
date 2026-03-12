@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 15:46:21 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/12 01:32:49 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/12 10:18:18 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 void	cmdPass(Server & server, Client & client, std::vector<std::string> & tokens)
 {
 	if (tokens.size() < 2) {
-		std::cout << ERROR << "Error: PASS requires a password" << RST << std::endl;
+		std::cout << ERROR << "Error: PASS requires a password for client" << " (fd: " << client.getFdClient() << ")" << RST << std::endl;
 		return;
 	}
 	if (client.getPassOk()) {
