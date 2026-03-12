@@ -6,14 +6,13 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/12 01:14:08 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/13 00:00:43 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Client.hpp"
 #include <string>
-#include <iostream>
-
 
 /* ======================== parameter constructor =========================== */
 Server::Server(int port, const std::string& pass) :
@@ -28,9 +27,14 @@ Server::Server(int port, const std::string& pass) :
 Server::~Server(void)
 {}
 
-std::string	Server::getPass(void) const
+const std::string	&Server::getPass(void) const
 {
 	return (_pass);
+}
+
+const std::map<int, Client>	&Server::getClients(void) const
+{
+	return (_clients);
 }
 
 
@@ -57,7 +61,20 @@ void	Server::processBuffer(Client & client)
 	{
 		std::string	line = buffer.substr(0, pos);
 		buffer.erase(0, pos + 2);
-		//std::cout << "[CMD] " << line << std::endl;
 		handleCmd(*this, client, line);
+	}
+}
+
+void	Server::sendMsg(int clientFd, const std::string & msg)
+{
+	send(clientFd, msg.c_str(), msg.size(), 0);
+}
+
+void Server::broadcast(const std::string &msg, int excludeFd)
+{
+	for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		if (it->second.getFdClient() != excludeFd)
+			sendMsg(it->second.getFdClient(), msg);
 	}
 }

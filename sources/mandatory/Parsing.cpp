@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 01:03:47 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/12 10:18:23 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/12 20:23:53 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ std::vector<std::string>	Tokenizer(std::string & line)
 				token.push_back(line.substr(start, i - start));
 			start = i + 1;
 		}
-		else if (line[i] == ':') {
+		else if (line[i] == ':' && i == start) {
 			if (i > start)
 				token.push_back(line.substr(start, i - start));
 			token.push_back(line.substr(i + 1));
@@ -58,8 +58,8 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 	if (cmd == "PASS") {
 		cmdPass(server, client, tokens);
 	}
-	// else if (cmd == "NICK")
-	// 	cmdNick(client, tokens);
+	else if (cmd == "NICK")
+		cmdNick(server, client, tokens);
 	// else if (cmd == "USER")
 	// 	cmdUser(client, tokens);
 	// else if (cmd == "JOIN")

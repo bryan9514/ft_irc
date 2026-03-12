@@ -6,12 +6,12 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 10:54:43 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/10 13:22:24 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/12 23:24:53 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"   // definition of the Server class
-#include "ft_irc.hpp"   // project macros (colors, messages, etc.)
+#include "IrcCodes.hpp" // definition of colors
 #include <sys/socket.h> // socket(), bind(), listen(), accept(), send(), recv()
 #include <fcntl.h>      // fcntl() to configure the socket (e.g., O_NONBLOCK)
 #include <unistd.h>     // close()
@@ -113,7 +113,7 @@ void	Server::listenSocket(void)
 
 	if (listen(_serSocketFd, SOMAXCONN) != 0)
 		throw std::runtime_error("Error: listen failed");
-	std::cout << SUCCESS << "[SERVER] listening on SERV_PORT: " << _port << RST << std::endl;
+	std::cout << INFO << "[SERVER] listening on SERV_PORT: " << _port << RST << std::endl;
 	newPoll.fd = _serSocketFd;
 	newPoll.events = POLLIN;
 	newPoll.revents = 0;

@@ -6,13 +6,13 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 10:59:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/11 20:19:14 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/12 23:24:32 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"   // definition of the Server class
-#include "ft_irc.hpp"   // project macros (colors, messages, etc.)
 #include "Client.hpp"   // definition of the Client class
+#include "IrcCodes.hpp" // definition of colors
 #include <cerrno>       // errno values (EAGAIN, EWOULDBLOCK, etc.)
 #include <stdexcept>    // std::runtime_error for throwing exceptions
 #include <sys/poll.h>   // poll() and struct pollfd
@@ -151,7 +151,7 @@ void Server::handleClientData(int fd)
 */
 void	Server::runServer(void)
 {
-	std::cout << SUCCESS << "[SERVER] Waiting to accept a connection..." << RST << std::endl;
+	std::cout << INFO << "[SERVER] Waiting to accept a connection..." << RST << std::endl;
 	while (!gSignalStatus)
 	{
 		int ret = poll(&_pollFds[0], _pollFds.size(), 1000);

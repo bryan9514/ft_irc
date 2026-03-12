@@ -6,14 +6,14 @@
 #    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/03/12 01:31:22 by brturcio         ###   ########.fr        #
+#    Updated: 2026/03/12 20:11:01 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:= ircserv
 BONUS		:= ircserv_bonus
 CC			:= c++
-CFLAGS		:= -Wall -Wextra -Werror -std=c++98
+CFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g
 
 DIR_SRCS_M	:= sources/mandatory/
 DIR_SRCS_B	:= sources/bonus/
@@ -22,7 +22,7 @@ DIR_OBJS_M	:= objs/mandatory/
 DIR_OBJS_B	:= objs/bonus/
 
 M_SOURCES	:=  main.cpp Server.cpp ServerSocket.cpp ServerRun.cpp Client.cpp ServerUtils.cpp Parsing.cpp \
-				Commands/PASS.cpp
+				Commands/PASS.cpp Commands/NICK.cpp
 B_SOURCES	:= 
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))
