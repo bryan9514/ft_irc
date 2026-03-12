@@ -6,29 +6,24 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/04 10:41:40 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/12 01:16:55 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-/* For sorcket, bind, listen,   */
-#include <sys/types.h>
-#include <sys/socket.h>
+#include "Client.hpp"   // definition of the Client class
+#include <sys/types.h>  // socket related types (socklen_t, size_t, etc)
+#include <sys/socket.h> // socket(), bind(), listen(), accept(), send(), recv()
+#include <poll.h>       // poll() and struct pollfd
+#include <netinet/in.h> // struct sockaddr_in
+#include <string>       // std::string
+#include <vector>       // std::vector
+#include <map>          // std::map
+#include <signal.h>
 
-/* For poll */
-#include <poll.h>
-
-/* For struct sockaddr_in */
-#include <netinet/in.h>
-
-/* For containers */
-#include <string>
-#include <vector>
-#include <map>
-
-class Client;
+extern volatile sig_atomic_t gSignalStatus;
 
 class Server
 {
@@ -41,6 +36,7 @@ private:
 	struct sockaddr_in 		_socketAddress;
 
 	void	createSocket(void);
+	void	setNonBlocking(int fd);
 	void	configureSocket(void);
 	void	setSocketOptions(void);
 	void	bindSocket(void);
@@ -50,14 +46,22 @@ private:
 	void	handleClientData(int fd);
 	void	removeClient(int fd);
 
+	void	processBuffer(Client & client);
+
 public:
 	Server(int port, const std::string& pass);
 	~Server(void);
 
 	void	initServer();
 	void	runServer();
-
+	void	shutdownServer(void);
+	
+	std::string	getPass(void) const;
 };
+
+void	signalHandler(int signal);
+void	handleCmd(Server & server ,Client & client, std::string & line);
+void	cmdPass(Server & server, Client & client, std::vector<std::string> & tokens);
 
 #endif
 

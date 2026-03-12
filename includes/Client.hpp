@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 10:33:33 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/09 21:36:08 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:17:15 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ private:
 	std::string		_nickName;
 	std::string		_userName;
 	std::string		_buffer;
+	bool			_passOk;
+	bool			_hasNick;
+	bool			_hasUser;
 	bool			_registered;
 
 public:
@@ -34,6 +37,10 @@ public:
 	void	setUserName(const std::string & userName);
 	void	setBuffer(const std::string & data);
 	void	setRegistered(bool registered);
+
+	void	setPassOk(bool value);
+	void	setHasNick(bool value);
+	void	setHasUser(bool value);
 	
 	void	appendBuffer(const std::string &newData);
 
@@ -41,8 +48,12 @@ public:
 	const std::string &	getPassClient(void) const;
 	const std::string &	getNickName(void) const;
 	const std::string &	getUserName(void) const;
-	const std::string &	getBuffer(void) const;
-	bool				getRegistered(void) const;
+	std::string &		getBuffer(void);
+
+	bool	getPassOk(void) const;
+	bool	getHasNick(void) const;
+	bool	getHasUser(void) const;
+	bool	getRegistered(void) const;
 };
 
 #endif

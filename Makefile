@@ -6,7 +6,7 @@
 #    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/03/04 11:51:27 by brturcio         ###   ########.fr        #
+#    Updated: 2026/03/12 01:31:22 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,8 @@ DIR_SRCS_B	:= sources/bonus/
 DIR_OBJS_M	:= objs/mandatory/
 DIR_OBJS_B	:= objs/bonus/
 
-M_SOURCES	:= main.cpp Server.cpp
+M_SOURCES	:=  main.cpp Server.cpp ServerSocket.cpp ServerRun.cpp Client.cpp ServerUtils.cpp Parsing.cpp \
+				Commands/PASS.cpp
 B_SOURCES	:= 
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))
@@ -44,14 +45,14 @@ all: $(NAME)
 bonus: $(BONUS)
 
 $(DIR_OBJS_M)%.o: $(DIR_SRCS_M)%.cpp
-	@mkdir -p $(DIR_OBJS_M)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 	@$(eval M_COUNT=$(shell echo $$(( $(M_COUNT) + 1 ))))
 	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \
 	$$(( $(M_COUNT) * 100 / $(M_TOTAL) )) $<
 
 $(DIR_OBJS_B)%.o: $(DIR_SRCS_B)%.cpp
-	@mkdir -p $(DIR_OBJS_B)
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 	@$(eval B_COUNT=$(shell echo $$(( $(B_COUNT) + 1 ))))
 	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \

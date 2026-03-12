@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 21:07:34 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/09 21:32:51 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/11 20:12:38 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ Client::Client() :
 	_nickName(""),
 	_userName(""),
 	_buffer(""),
+	_passOk(false),
+	_hasNick(false),
+	_hasUser(false),
 	_registered(false)
 {}
 
@@ -54,6 +57,21 @@ void	Client::setRegistered(bool registered)
 	_registered = registered;
 }
 
+void Client::setPassOk(bool value)
+{
+	_passOk = value;
+}
+
+void Client::setHasNick(bool value)
+{
+	_hasNick = value;
+}
+
+void Client::setHasUser(bool value)
+{
+	_hasUser = value;
+}
+
 void	Client::appendBuffer(const std::string & newData)
 {
 	_buffer += newData;
@@ -81,15 +99,31 @@ const std::string &	Client::getUserName(void) const
 	return (_userName);
 }
 
-const std::string &	Client::getBuffer(void) const
+std::string &	Client::getBuffer(void)
 {
 	return (_buffer);
+}
+
+bool Client::getPassOk(void) const
+{
+	return _passOk;
+}
+
+bool Client::getHasNick(void) const
+{
+	return _hasNick;
+}
+
+bool Client::getHasUser(void) const
+{
+	return _hasUser;
 }
 
 bool	Client::getRegistered(void) const
 {
 	return (_registered);
 }
+
 
 
 
