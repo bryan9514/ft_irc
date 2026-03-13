@@ -6,7 +6,7 @@
 #    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/03/12 20:11:01 by brturcio         ###   ########.fr        #
+#    Updated: 2026/03/13 21:35:35 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ DIR_OBJS_M	:= objs/mandatory/
 DIR_OBJS_B	:= objs/bonus/
 
 M_SOURCES	:=  main.cpp Server.cpp ServerSocket.cpp ServerRun.cpp Client.cpp ServerUtils.cpp Parsing.cpp \
-				Commands/PASS.cpp Commands/NICK.cpp
+				Commands/CmdsErrors.cpp Commands/Pass.cpp Commands/Nick.cpp Commands/User.cpp
 B_SOURCES	:= 
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))

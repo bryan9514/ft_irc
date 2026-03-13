@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/12 23:46:34 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/13 21:42:08 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SERVER_HPP
 
 #include "Client.hpp"   // definition of the Client class
+#include "IrcCodes.hpp"
 #include <sys/types.h>  // socket related types (socklen_t, size_t, etc)
 #include <sys/socket.h> // socket(), bind(), listen(), accept(), send(), recv()
 #include <poll.h>       // poll() and struct pollfd
@@ -55,20 +56,26 @@ public:
 	void	initServer();
 	void	runServer();
 	void	shutdownServer(void);
-	void	sendMsg(int cliendFd, const std::string & msg);
+	void	sendToClient(Client & client, const std::string & msg);
 	void	broadcast(const std::string &msg, int excludeFd = -1);
+	void	checkRegistration(Client & client);
 	
 	const std::string			&getPass(void) const;
 	const std::map<int, Client>	&getClients(void) const;
+	Client						&getClient(int fd);
+
 };
 
-void printMyMsg(const std::string &color, const std::string &module, const std::string &type,
-				const std::string &msg, int fd, const std::string &value = "");
+void printMyMsg(const std::string & color, const std::string & cmd, const std::string & type,
+				const std::string & msg, int fd, const std::string & value = "");
+void controlErrors(Server & server, Client & client, CmdsError code,
+			   const std::string & cmd = "", const std::string & param = "");
 
 void	signalHandler(int signal);
 void	handleCmd(Server & server ,Client & client, std::string & line);
 void	cmdPass(Server & server, Client & client, std::vector<std::string> & tokens);
 void	cmdNick(Server & server, Client & client, std::vector<std::string> & tokens);
+void	cmdUser(Server & server, Client & client, std::vector<std::string> & tokens);
 
 #endif
 

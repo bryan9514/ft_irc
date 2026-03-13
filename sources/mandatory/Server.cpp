@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/13 00:00:43 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/13 23:40:47 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ const std::map<int, Client>	&Server::getClients(void) const
 	return (_clients);
 }
 
+Client	&Server::getClient(int fd)
+{
+	return (_clients[fd]);
+}
 
 /* ============================== member functions ========================== */
 void Server::shutdownServer(void)
@@ -51,7 +55,6 @@ void Server::shutdownServer(void)
 	}
 }
 
-
 void	Server::processBuffer(Client & client)
 {
 	std::string	&buffer = client.getBuffer();
@@ -65,16 +68,39 @@ void	Server::processBuffer(Client & client)
 	}
 }
 
-void	Server::sendMsg(int clientFd, const std::string & msg)
+void	Server::sendToClient(Client & client, const std::string & msg)
 {
-	send(clientFd, msg.c_str(), msg.size(), 0);
+	client.appendOutBuffer(msg);
+
+	for (size_t i = 0; i < _pollFds.size(); i++)
+	{
+		if (_pollFds[i].fd == client.getFdClient())
+		{
+			_pollFds[i].events |= POLLOUT;
+			break;
+		}
+	}
 }
 
 void Server::broadcast(const std::string &msg, int excludeFd)
 {
 	for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
-		if (it->second.getFdClient() != excludeFd)
-			sendMsg(it->second.getFdClient(), msg);
+		if (it->first != excludeFd)
+			sendToClient(it->second, msg);
+	}
+}
+
+void	Server::checkRegistration(Client & client)
+{
+	if (!client.getRegistered() && client.getPassOk() && client.getHasNick() && client.getHasUser())
+	{
+		client.setRegistered(true);
+
+		std::string nick = client.getNickName();
+		std::string msg = ":ircserv 001 " + nick + " :Welcome to the ircserv Network " 
+			+ nick + "!" + client.getUserName() + "@localhost\r\n";
+		printMyMsg(SUCCESS, "REGISTER", "Success", "client registered", client.getFdClient(), nick);
+		sendToClient(client, msg);
 	}
 }

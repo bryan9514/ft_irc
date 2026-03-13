@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 10:59:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/12 23:24:32 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/13 18:28:37 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <sys/poll.h>   // poll() and struct pollfd
 #include <sys/socket.h> // socket functions (accept, recv, send, etc.)
 #include <fcntl.h>      // fcntl() to set socket as non-blocking
+#include <sys/types.h>
 #include <unistd.h>     // close()
 #include <iostream>     // std::cout / std::cerr
 
@@ -171,6 +172,18 @@ void	Server::runServer(void)
 					acceptClient();
 				else
 					handleClientData(_pollFds[i].fd);
+			}
+			if (_pollFds[i].revents & POLLOUT) {
+				Client		&client = getClient(_pollFds[i].fd);
+				std::string	&out = client.getOutBuffer();
+				if (!out.empty())
+				{
+					ssize_t sent = send(_pollFds[i].fd, out.c_str(), out.size(), 0);
+					if (sent > 0)
+						out.erase(0, sent);
+				}
+				if (out.empty())
+					_pollFds[i].events &= ~POLLOUT;
 			}
 			_pollFds[i].revents = 0;
 		}

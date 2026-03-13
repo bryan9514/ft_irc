@@ -6,12 +6,14 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 01:03:47 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/12 20:23:53 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/13 23:37:42 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Client.hpp"
+#include <algorithm>
+#include <cctype>
 #include <vector>
 #include <string>
 
@@ -49,19 +51,18 @@ std::vector<std::string>	Tokenizer(std::string & line)
 
 void	handleCmd(Server & server, Client & client, std::string & line)
 {
-	(void)client;
 	std::vector<std::string>	tokens = Tokenizer(line);
 	
 	if (tokens.empty())
 		return ;
 	std::string cmd = tokens[0];
-	if (cmd == "PASS") {
+	std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
+	if (cmd == "PASS")
 		cmdPass(server, client, tokens);
-	}
 	else if (cmd == "NICK")
 		cmdNick(server, client, tokens);
-	// else if (cmd == "USER")
-	// 	cmdUser(client, tokens);
+	else if (cmd == "USER")
+		cmdUser(server, client, tokens);
 	// else if (cmd == "JOIN")
 	// 	cmdJoin(client, tokens);
 }
