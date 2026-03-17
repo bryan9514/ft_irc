@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 01:03:47 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/13 23:37:42 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/16 11:26:11 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <cctype>
 #include <vector>
 #include <string>
+#include <iostream>
 
 std::vector<std::string>	Tokenizer(std::string & line)
 {
@@ -57,6 +58,7 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 		return ;
 	std::string cmd = tokens[0];
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
+	std::cout << "cmd: " << cmd << std::endl;
 	if (cmd == "PASS")
 		cmdPass(server, client, tokens);
 	else if (cmd == "NICK")
