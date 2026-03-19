@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
+#    By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/03/13 21:35:35 by brturcio         ###   ########.fr        #
+#    Updated: 2026/03/19 10:29:17 by ntome            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,8 @@ DIR_OBJS_M	:= objs/mandatory/
 DIR_OBJS_B	:= objs/bonus/
 
 M_SOURCES	:=  main.cpp Server.cpp ServerSocket.cpp ServerRun.cpp Client.cpp ServerUtils.cpp Parsing.cpp \
-				Commands/CmdsErrors.cpp Commands/Pass.cpp Commands/Nick.cpp Commands/User.cpp
+				Commands/CmdsErrors.cpp Commands/Pass.cpp Commands/Nick.cpp Commands/User.cpp \
+				Channel.cpp ChannelRules.cpp Topic.cpp
 B_SOURCES	:= 
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))

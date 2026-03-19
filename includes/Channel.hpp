@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 11:40:36 by ntome             #+#    #+#             */
-/*   Updated: 2026/03/17 14:59:05 by ntome            ###   ########.fr       */
+/*   Updated: 2026/03/19 10:12:56 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <string> //std::string
 # include <map> //std::map
 # include <vector> //std::vector
+# include <algorithm> //std::find
 # include <Client.hpp>
 # include <Topic.hpp>
 # include <ChannelRules.hpp>
@@ -47,9 +48,9 @@ class Channel
 		//Getter
 
 		std::string	getName(void) const;
-		bool		isMember(Client *client);
-		bool		isOperator(Client *client);
-		bool		isNormalMember(Client *client);
+		bool		isMember(Client *client) const;
+		bool		isOperator(Client *client) const;
+		bool		isNormalMember(Client *client) const;
 };
 
 #endif
