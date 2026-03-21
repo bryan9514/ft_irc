@@ -99,9 +99,20 @@ void	Server::checkRegistration(Client & client)
 		client.setRegistered(true);
 
 		std::string nick = client.getNickName();
-		std::string msg = ":ircserv 001 " + nick + " :Welcome to the ircserv Network " 
-			+ nick + "!" + client.getUserName() + "@localhost\r\n";
 		printMyMsg(SUCCESS, "REGISTER", "Success", "client registered", client.getFdClient(), nick);
+    controlRPL(server, client, RPL_WELCOME)
 		sendToClient(client, msg);
 	}
+}
+
+//=========================getterChannel
+
+Channel*  Server::getChannel(const std::string &name)
+{
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
+    {
+        if (it->first == name)
+            return (it->second);
+    }
+    return (NULL);
 }

@@ -35,6 +35,7 @@ private:
 	std::map<int, Client>	_clients;
 	std::vector<pollfd>		_pollFds;
 	struct sockaddr_in 		_socketAddress;
+  std::map<std::string, Channel*>  _channels;
 
 	void	createSocket(void);
 	void	setNonBlocking(int fd);
@@ -60,10 +61,11 @@ public:
 	void	broadcast(const std::string &msg, int excludeFd = -1);
 	void	checkRegistration(Client & client);
 	
-	const std::string			&getPass(void) const;
-	const std::map<int, Client>	&getClients(void) const;
-	Client						&getClient(int fd);
-
+	const std::string	    	      &getPass(void) const;
+	const std::map<int, Client>	  &getClients(void) const;
+	Client						            &getClient(int fd);
+  Channel*                      getChannel(const std::string &name);
+  //Channel*  createChannel(const std::string &name, Client *client); sera necessaire
 };
 
 void printMyMsg(const std::string & color, const std::string & cmd, const std::string & type,
@@ -76,6 +78,7 @@ void	handleCmd(Server & server ,Client & client, std::string & line);
 void	cmdPass(Server & server, Client & client, std::vector<std::string> & tokens);
 void	cmdNick(Server & server, Client & client, std::vector<std::string> & tokens);
 void	cmdUser(Server & server, Client & client, std::vector<std::string> & tokens);
+void  cmdMode(Server &server, Client &client, std::vector<std::string> &tokens);
 
 #endif
 

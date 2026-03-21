@@ -82,3 +82,9 @@ bool		Channel::isNormalMember(Client *client) const {
 	}
 	return false;
 }
+
+void Channel::broadcastToMembers(Server &server, const std::string &msg)
+{
+    for (std::map<int, Client*>::iterator it = _members.begin(); it != _members.end(); it++)
+        server.sendToClient(*it->second, msg);
+}

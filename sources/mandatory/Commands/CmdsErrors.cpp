@@ -33,6 +33,9 @@ void controlErrors(Server & server, Client & client, CmdsError code,
 		nick = "*";
 	std::string msg;
 	switch (code) {
+    case ERR_NOSUCHCHANNEL:
+      msg = ":ircserv 403 " + nick + " " + param + " :No such channel\r\n";
+      break;
 		case ERR_NONICKNAMEGIVEN:
 			msg = ":ircserv 431 * :No nickname given\r\n";
 			break;
@@ -51,6 +54,54 @@ void controlErrors(Server & server, Client & client, CmdsError code,
 		case ERR_PASSWDMISMATCH:
 			msg = ":ircserv 464 " + nick + " :Password incorrect\r\n";
 			break;
+    case ERR_KEYSET:
+      msg = ":ircserv 467 " + nick + " " + param + " :Channel key already set\r\n";
+      break;
+    case ERR_CHANNELISFULL:
+      msg = ":ircserv 471 " + nick + " " + param + " :Cannot join channel (+l)\r\n";
+      break;
+    case ERR_UNKNOWNMODE:
+      msg = ":ircserv 472 " + nick + " " + param + " :is unknown mode char to me\r\n";
+      break;
+    case ERR_CHANOPRIVSNEEDED:
+      msg = ":ircserv 482 " + nick + " " + param + " :You're not channel operator\r\n";
+      break;
+		default:
+			return ;
+	}
+	if (!msg.empty())
+	    server.sendToClient(client, msg);
+}
+
+void controlRPL(Server & server, Client & client, CmdsRPL code,
+			   const std::string & cmd, const std::string & param)
+{
+	std::string nick = client.getNickName();
+	if (nick.empty())
+		nick = "*";
+	std::string msg;
+	switch (code) {
+    case RPL_WELCOME:
+      msg = ":ircserv 001 " + nick + " :Welcome to the ircserv Network " + nick + "!" + client.getUserName() + "@localhost\r\n";
+      break;
+    case RPL_CHANNELMODEIS:
+      msg = ":ircserv 324 " + nick + " " + cmd + " " + param + "\r\n";
+      break;
+    case RPL_NOTOPIC:
+      msg = ":ircserv 331 " + nick + " " + param + " :No topic is set\r\n";
+      break;
+    case RPL_TOPIC:
+      msg = ":ircserv 331 " + nick + " " + param + " :" + "IL MANQUE LES TRUCS DE TOPIC ICI SORRY";
+      break;
+    case RPL_NAMEREPLY:
+      msg = ":ircserv 353 " + nick + " :Welcome to the ircserv Network " + nick + "!" + client.getUserName() + "@localhost\r\n";
+      break;
+    case RPL_ENDOFNAMES:
+      msg = ":ircserv 366 " + nick + " :Welcome to the ircserv Network " + nick + "!" + client.getUserName() + "@localhost\r\n";
+      break;
+    case RPL_INVITING:
+      msg = ":ircserv 341 " + nick + " " + cmd + " " + param + "\r\n";
+      break;
 		default:
 			return ;
 	}

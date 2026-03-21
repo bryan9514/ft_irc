@@ -51,6 +51,8 @@ class Channel
 		bool		isMember(Client *client) const;
 		bool		isOperator(Client *client) const;
 		bool		isNormalMember(Client *client) const;
+
+    void    broadcastToMembers(Server &server, const std::string &msg);
 };
 
 #endif
