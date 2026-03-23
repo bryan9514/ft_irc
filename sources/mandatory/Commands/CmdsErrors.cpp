@@ -91,19 +91,16 @@ void controlRPL(Server & server, Client & client, CmdsRPL code,
       msg = ":ircserv 331 " + nick + " " + param + " :No topic is set\r\n";
       break;
     case RPL_TOPIC:
-      msg = ":ircserv 331 " + nick + " " + param + " :" + "IL MANQUE LES TRUCS DE TOPIC ICI SORRY";
-      break;
-    case RPL_NAMEREPLY:
-      msg = ":ircserv 353 " + nick + " :Welcome to the ircserv Network " + nick + "!" + client.getUserName() + "@localhost\r\n";
+      msg = ":ircserv 332 " + nick + " " + cmd + " :" + param + "\r\n";
       break;
     case RPL_ENDOFNAMES:
-      msg = ":ircserv 366 " + nick + " :Welcome to the ircserv Network " + nick + "!" + client.getUserName() + "@localhost\r\n";
+      msg = ":ircserv 366 " + nick + " " + cmd + " :End of /NAME list\r\n";
       break;
     case RPL_INVITING:
       msg = ":ircserv 341 " + nick + " " + cmd + " " + param + "\r\n";
       break;
-		default:
-			return ;
+	default:
+	  return ;
 	}
 	if (!msg.empty())
 	    server.sendToClient(client, msg);

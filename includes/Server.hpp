@@ -61,10 +61,10 @@ public:
 	void	broadcast(const std::string &msg, int excludeFd = -1);
 	void	checkRegistration(Client & client);
 	
-	const std::string	    	      &getPass(void) const;
-	const std::map<int, Client>	  &getClients(void) const;
-	Client						            &getClient(int fd);
-  Channel*                      getChannel(const std::string &name);
+	const std::string					&getPass(void) const;
+	const std::map<int, Client>			&getClients(void) const;
+	Client						        &getClient(int fd);
+	Channel*							getChannel(const std::string &name);
   //Channel*  createChannel(const std::string &name, Client *client); sera necessaire
 };
 

@@ -88,3 +88,24 @@ void Channel::broadcastToMembers(Server &server, const std::string &msg)
     for (std::map<int, Client*>::iterator it = _members.begin(); it != _members.end(); it++)
         server.sendToClient(*it->second, msg);
 }
+
+//Getter of rules
+bool Channel::getInviteOnly(void) const
+{
+    return _rules.getInviteOnly();
+}
+
+bool Channel::getTopicSetRule(void) const
+{
+    return _rules.getTopicSetRule();
+}
+
+std::string Channel::getPassword(void) const
+{
+    return _rules.getPassword();
+}
+
+int Channel::getUserLimit(void) const
+{
+    return _rules.getUserLimit();
+}
