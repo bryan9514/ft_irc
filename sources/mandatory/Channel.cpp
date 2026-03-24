@@ -82,11 +82,54 @@ bool		Channel::isNormalMember(Client *client) const {
 	}
 	return false;
 }
-
+//Modes utility
 void Channel::broadcastToMembers(Server &server, const std::string &msg)
 {
     for (std::map<int, Client*>::iterator it = _members.begin(); it != _members.end(); it++)
         server.sendToClient(*it->second, msg);
+}
+
+void	Channel::applyMode(Server &server, Client &client, std::vector<std::string> &tokens)
+{
+	std::string modes = tokens[2];
+	std::vector<std::string> args(tokens.begin() + 3, tokens.end());
+	int argIndex = 0;
+	bool plusminus = false;
+	for (size_t i = 0; i < modes.size(); i++)
+	{
+		char c = modes[i];
+		if (c == '+')
+			plusminus = true;
+		else if (c == '-')
+			plusminus = false;
+		else if (c == 'i')
+			this->setInviteOnly(plusminus);
+		else if (c == 't')
+			this->setTopicSetRule(plusminus);
+		else if (c == 'k')
+		{
+			if (plusminus == true)
+				this->setPassword(args[argIndex]);
+			else
+				this->setPassword("");
+			argIndex++;
+		}
+		else if (c == 'l')
+		{
+			if (plusminus == true)
+				this->setUserLimit(std::atoi(args[argIndex].c_str()));
+			else
+				this->setUserLimit(-1);
+			argIndex++;
+		}
+		else if (c == 'o')
+		{
+			if (plusminus == true)
+				addOperator(client);
+			else
+				removeOperator(client);
+		}
+	}
 }
 
 //Getter of rules
@@ -108,4 +151,29 @@ std::string Channel::getPassword(void) const
 int Channel::getUserLimit(void) const
 {
     return _rules.getUserLimit();
+}
+
+//Setter of rules
+void    Channel::setInviteOnly(bool state)
+{
+	this->_rules.setInviteOnly(state);
+	return ;
+}
+
+void    Channel::setTopicSetRule(bool state)
+{
+	this->_rules.setTopicSetRule(state);
+	return ;
+}
+
+void    Channel::setPassword(std::string password)
+{
+	this->_rules.setPassword(password);
+	return ;
+}
+
+void    Channel::setUserLimit(int limit)
+{
+	this->_rules.setUserLimit(limit);
+	return ;
 }

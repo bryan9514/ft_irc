@@ -52,11 +52,18 @@ class Channel
 		bool		isOperator(Client *client) const;
 		bool		isNormalMember(Client *client) const;
 
-		void    broadcastToMembers(Server &server, const std::string &msg);
-		bool        getInviteOnly(void) const;
+		void		broadcastToMembers(Server &server, const std::string &msg);
+		bool		getInviteOnly(void) const;
 		bool        getTopicSetRule(void) const;
 		std::string getPassword(void) const;
 		int         getUserLimit(void) const;
+
+		void    setInviteOnly(bool state);
+		void    setTopicSetRule(bool state);
+		void    setPassword(std::string password);
+		void    setUserLimit(int limit);
+
+		void		applyMode(Server &server, Client &client, std::vector<std::string> &tokens);
 };
 
 #endif
