@@ -58,12 +58,14 @@ class Channel
 		std::string getPassword(void) const;
 		int         getUserLimit(void) const;
 
-		void    setInviteOnly(bool state);
-		void    setTopicSetRule(bool state);
-		void    setPassword(std::string password);
-		void    setUserLimit(int limit);
+		void		setInviteOnly(bool state);
+		void		setTopicSetRule(bool state);
+		void		setPassword(std::string password);
+		void		setUserLimit(int limit);
 
 		void		applyMode(Server &server, Client &client, std::vector<std::string> &tokens);
+		void		addOperatorByString(std::string name);
+		void		removeOperatorByString(std::string name);
 };
 
 #endif

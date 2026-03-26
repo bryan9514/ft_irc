@@ -108,26 +108,35 @@ void	Channel::applyMode(Server &server, Client &client, std::vector<std::string>
 			this->setTopicSetRule(plusminus);
 		else if (c == 'k')
 		{
-			if (plusminus == true)
-				this->setPassword(args[argIndex]);
+			if (plusminus) {
+				if (argIndex < (int)args.size())
+					this->setPassword(args[argIndex++]);
+			}
 			else
 				this->setPassword("");
-			argIndex++;
 		}
 		else if (c == 'l')
 		{
-			if (plusminus == true)
-				this->setUserLimit(std::atoi(args[argIndex].c_str()));
+			if (plusminus) {
+				if (argIndex < (int)args.size())
+					this->setUserLimit(std::atoi(args[argIndex++].c_str()));
+			}
 			else
 				this->setUserLimit(-1);
-			argIndex++;
 		}
 		else if (c == 'o')
 		{
-			if (plusminus == true)
-				addOperator(client);
-			else
-				removeOperator(client);
+			if (plusminus) {
+				if (argIndex < (int)args.size())
+					addOperatorByString(args[argIndex++]);
+			}
+			else if (argIndex < (int)args.size())
+				removeOperatorByString(args[argIndex++]);
+		}
+		else {
+			printMyMsg(ERROR, "MODE", "Error", "is unknown mode char to me", client.getFdClient());
+			controlErrors(server, client, ERR_UNKNOWNMODE, "MODE", std::string(1, c));
+			return ;
 		}
 	}
 }
@@ -176,4 +185,23 @@ void    Channel::setUserLimit(int limit)
 {
 	this->_rules.setUserLimit(limit);
 	return ;
+}
+
+//utils for Mode
+void	Channel::addOperatorByString(std::string name)
+{
+	for (int i = 0; i < this->_normal_members.size(); i++)
+	{
+		if (this->_normal_members[i]->getNickName() == name)
+			this->addOperator(_normal_members[i]);
+	}
+}
+
+void	Channel::removeOperatorByString(std::string name)
+{
+	for (int i = 0; i < this->_normal_members.size(); i++)
+	{
+		if (this->_normal_members[i]->getNickName() == name)
+			this->removeOperator(_normal_members[i]);
+	}
 }
