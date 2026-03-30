@@ -22,6 +22,8 @@
 
 enum CmdsError
 {
+    ERR_NOSUCHNICK = 401,
+    // Returned when the nick cannot be found.
     ERR_NOSUCHCHANNEL = 403,
     // Returned when the channel cannot be found with the supplied channel name.
     ERR_NONICKNAMEGIVEN = 431,
@@ -30,6 +32,10 @@ enum CmdsError
     // Returned when the nickname has an invalid format or contains forbidden characters.
     ERR_NICKNAMEINUSE = 433,
     // Returned when the requested nickname is already used by another client.
+    ERR_USERNOTINCHANNEL = 441,
+    // Returned when the target user is not in the specified channel.
+    ERR_NOTONCHANNEL = 442,
+    // Returned when the client is not on the specified channel.
     ERR_NEEDMOREPARAMS = 461,
     // Returned when a command is missing required parameters.
     ERR_ALREADYREGISTERED = 462,

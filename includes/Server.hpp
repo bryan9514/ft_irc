@@ -23,6 +23,7 @@
 #include <vector>       // std::vector
 #include <map>          // std::map
 #include <signal.h>
+#include <sstream>
 
 extern volatile sig_atomic_t gSignalStatus;
 

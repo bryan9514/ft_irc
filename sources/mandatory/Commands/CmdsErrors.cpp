@@ -33,6 +33,9 @@ void controlErrors(Server & server, Client & client, CmdsError code,
 		nick = "*";
 	std::string msg;
 	switch (code) {
+    case ERR_NOSUCHNICK:
+      msg = ":ircserv 401 " + nick + " " + param + " :No such nick\r\n";
+      break;
     case ERR_NOSUCHCHANNEL:
       msg = ":ircserv 403 " + nick + " " + param + " :No such channel\r\n";
       break;
@@ -45,6 +48,12 @@ void controlErrors(Server & server, Client & client, CmdsError code,
 		case ERR_NICKNAMEINUSE:
 			msg = ":ircserv 433 " + nick + " " + param + " :Nickname is already in use\r\n";
 			break;
+    case ERR_USERNOTINCHANNEL:
+      msg = ":ircserv 441 " + nick + " " + param + " :They aren't on that channel\r\n";
+      break;
+    case ERR_NOTONCHANNEL:
+      msg = ":ircserv 442 " + nick + " " + param + " :You're not on that channel\r\n";
+      break;
 		case ERR_NEEDMOREPARAMS:
 			msg = ":ircserv 461 " + nick + " " + cmd + " :Not enough parameters\r\n";
 			break;
