@@ -6,7 +6,7 @@
 #    By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/03/19 10:29:17 by ntome            ###   ########.fr        #
+#    Updated: 2026/03/28 12:25:16 by ntome            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,9 +21,21 @@ DIR_SRCS_B	:= sources/bonus/
 DIR_OBJS_M	:= objs/mandatory/
 DIR_OBJS_B	:= objs/bonus/
 
-M_SOURCES	:=  main.cpp Server.cpp ServerSocket.cpp ServerRun.cpp Client.cpp ServerUtils.cpp Parsing.cpp \
-				Commands/CmdsErrors.cpp Commands/Pass.cpp Commands/Nick.cpp Commands/User.cpp \
-				Channel.cpp ChannelRules.cpp Topic.cpp
+M_SOURCES	:=  main.cpp \
+				Server.cpp \
+				ServerSocket.cpp \
+				ServerRun.cpp \
+				Client.cpp \
+				ServerUtils.cpp \
+				Parsing.cpp \
+				Commands/CmdsErrors.cpp \
+				Commands/Pass.cpp \
+				Commands/Nick.cpp \
+				Commands/User.cpp \
+				Commands/Join.cpp \
+				Channel.cpp \
+				ChannelRules.cpp \
+				Topic.cpp
 B_SOURCES	:= 
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))

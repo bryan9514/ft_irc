@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/16 11:25:35 by ntome            ###   ########.fr       */
+/*   Updated: 2026/03/31 18:32:12 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,25 @@ const std::map<int, Client>	&Server::getClients(void) const
 Client	&Server::getClient(int fd)
 {
 	return (_clients[fd]);
+}
+
+Channel &Server::getChannel(std::string name) {
+    std::map<std::string, Channel>::iterator it = _channels.find(name);
+    return it->second;
+}
+
+void	Server::createChannel(std::string name, Client client)
+{
+	this->_channels[name] = Channel(name);
+	this->_channels[name].addMember(&client);
+	this->_channels[name].addOperator(&client);
+}
+
+bool	Server::hasChannel(std::string name) const
+{
+	if (this->_channels.find(name) != this->_channels.end())
+		return (true);
+	return (false);
 }
 
 /* ============================== member functions ========================== */

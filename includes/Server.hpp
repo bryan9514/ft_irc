@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/13 21:42:08 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/31 13:41:26 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SERVER_HPP
 
 #include "Client.hpp"   // definition of the Client class
+#include "Channel.hpp"
 #include "IrcCodes.hpp"
 #include <sys/types.h>  // socket related types (socklen_t, size_t, etc)
 #include <sys/socket.h> // socket(), bind(), listen(), accept(), send(), recv()
@@ -29,12 +30,13 @@ extern volatile sig_atomic_t gSignalStatus;
 class Server
 {
 private:
-	int						_port;
-	int						_serSocketFd;
-	std::string				_pass;
-	std::map<int, Client>	_clients;
-	std::vector<pollfd>		_pollFds;
-	struct sockaddr_in 		_socketAddress;
+	int								_port;
+	int								_serSocketFd;
+	std::string						_pass;
+	std::map<int, Client>			_clients;
+	std::map<std::string, Channel>	_channels;
+	std::vector<pollfd>				_pollFds;
+	struct sockaddr_in 				_socketAddress;
 
 	void	createSocket(void);
 	void	setNonBlocking(int fd);
@@ -63,6 +65,9 @@ public:
 	const std::string			&getPass(void) const;
 	const std::map<int, Client>	&getClients(void) const;
 	Client						&getClient(int fd);
+	Channel						&getChannel(std::string name);
+	void						createChannel(std::string name, Client client);
+	bool						hasChannel(std::string name) const;
 
 };
 
@@ -76,6 +81,7 @@ void	handleCmd(Server & server ,Client & client, std::string & line);
 void	cmdPass(Server & server, Client & client, std::vector<std::string> & tokens);
 void	cmdNick(Server & server, Client & client, std::vector<std::string> & tokens);
 void	cmdUser(Server & server, Client & client, std::vector<std::string> & tokens);
+void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens);
 
 #endif
 

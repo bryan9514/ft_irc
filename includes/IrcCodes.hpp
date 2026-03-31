@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcCodes.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 23:22:26 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/13 21:15:11 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/03/31 13:12:10 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 
 enum CmdsError
 {
+	ERR_NOSUCHCHANNEL = 403,
+	// Returned when JOIN has a non channel name as input (like "fu" -> "#fu").
     ERR_NONICKNAMEGIVEN = 431,
     // Returned when the NICK command is sent without a nickname parameter.
     ERR_ERRONEUSNICKNAME = 432,
@@ -32,8 +34,14 @@ enum CmdsError
     // Returned when a command is missing required parameters.
     ERR_ALREADYREGISTERED = 462,
     // Returned when a client tries to register again after completing registration.
-    ERR_PASSWDMISMATCH = 464
+    ERR_PASSWDMISMATCH = 464,
     // Returned when the password provided with the PASS command is incorrect.
+	ERR_CHANNELISFULL = 471,
+	// Returned when the channel you want to join is full.
+	ERR_INVITEONLYCHAN = 473,
+	// Returned when we try to join a invite only chan without invitation.
+	ERR_BADCHANNELKEY = 475
+	// Rreturned when the key don't match the channel key in JOIN command.
 };
 
 #endif

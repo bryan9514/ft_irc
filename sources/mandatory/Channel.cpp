@@ -6,11 +6,18 @@
 /*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 14:56:59 by ntome             #+#    #+#             */
-/*   Updated: 2026/03/19 10:28:26 by ntome            ###   ########.fr       */
+/*   Updated: 2026/03/31 18:41:28 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+
+Channel::Channel(void)
+{
+	this->_name = "";
+	this->_topic = Topic();
+	this->_rules = ChannelRules();
+}
 
 Channel::Channel(std::string name) {
 	this->_name = name;
@@ -38,6 +45,10 @@ void	Channel::addNormalMember(Client *client) {
 	this->_normal_members.push_back(client);
 }
 
+void	Channel::addInvitation(Client *client) {
+	this->_invited.push_back(client);
+}
+
 void	Channel::removeMember(Client *client) {
 	if (this->isOperator(client))
 		removeOperator(client);
@@ -54,6 +65,12 @@ void	Channel::removeNormalMember(Client *client) {
 	std::vector<Client *>::iterator it = std::find(this->_normal_members.begin(), this->_normal_members.end(), client);
 	if (it != this->_normal_members.end())
 		this->_normal_members.erase(it);
+}
+
+void	Channel::removeInvitation(Client *client) {
+	std::vector<Client *>::iterator it = std::find(this->_invited.begin(), this->_invited.end(), client);
+	if (it != this->_invited.end())
+		this->_invited.erase(it);
 }
 
 //Getter
@@ -81,4 +98,28 @@ bool		Channel::isNormalMember(Client *client) const {
 			return true;
 	}
 	return false;
+}
+
+bool		Channel::isInvited(Client *client) const {
+	(void)client;
+	if (!this->_rules.getInviteOnly())
+		return (true);
+	return (false);
+	//TODO refaire cette fonction pour verifier la condition.
+}
+
+bool		Channel::isFull(void) const {
+	if (this->_rules.getUserLimit() == -1)
+		return (false);
+	else if ((int)this->_members.size() >= this->_rules.getUserLimit())
+		return (true);
+	return (false);
+}
+
+ChannelRules	Channel::getRules(void) const {
+	return (this->_rules);
+}
+
+Topic			Channel::getTopic(void) const {
+	return (this->_topic);
 }

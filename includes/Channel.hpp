@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 11:40:36 by ntome             #+#    #+#             */
-/*   Updated: 2026/03/19 10:12:56 by ntome            ###   ########.fr       */
+/*   Updated: 2026/03/31 18:32:55 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ class Channel
 		std::map<int, Client *>	_members; //Chan members
 		std::vector<Client *>	_operators; //Members that are mods
 		std::vector<Client *>	_normal_members; //Normal members
+		std::vector<Client *>	_invited; //Invited members
 		Topic					_topic; //The topic of the chan
 		ChannelRules			_rules; //The rules of the chan
 
 	public:
+		Channel(void);
 		Channel(std::string name);
 		~Channel(void);
 
@@ -41,16 +43,22 @@ class Channel
 		void	addMember(Client *client);
 		void	addOperator(Client *client);
 		void	addNormalMember(Client *client);
+		void	addInvitation(Client *client);
 		void	removeMember(Client *client);
 		void	removeOperator(Client *client);
 		void	removeNormalMember(Client *client);
+		void	removeInvitation(Client *client);
 
 		//Getter
 
-		std::string	getName(void) const;
-		bool		isMember(Client *client) const;
-		bool		isOperator(Client *client) const;
-		bool		isNormalMember(Client *client) const;
+		std::string		getName(void) const;
+		bool			isMember(Client *client) const;
+		bool			isOperator(Client *client) const;
+		bool			isNormalMember(Client *client) const;
+		bool			isInvited(Client *client) const;
+		bool			isFull(void) const;
+		ChannelRules	getRules(void) const;
+		Topic			getTopic(void) const;
 };
 
 #endif
