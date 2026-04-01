@@ -30,6 +30,7 @@ class Channel
 		std::vector<Client *>	_normal_members; //Normal members
 		Topic					_topic; //The topic of the chan
 		ChannelRules			_rules; //The rules of the chan
+		std::vector<std::string>	_invited;
 
 	public:
 		Channel(std::string name);
@@ -66,6 +67,10 @@ class Channel
 		void		applyMode(Server &server, Client &client, std::vector<std::string> &tokens);
 		void		addOperatorByString(std::string name);
 		void		removeOperatorByString(std::string name);
+
+		bool		IsMembersbyName(std::string name);
+		bool		IsInvitedbyName(std::string name);
+		void		addInvited(std::string name);
 };
 
 #endif

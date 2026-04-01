@@ -145,3 +145,13 @@ bool	Client::getRegistered(void) const
 {
 	return (_registered);
 }
+
+int		Client::getInvitationSize(void) const
+{
+	return (this->_invitation.size());
+}
+
+std::vector<std::string>		getInvitations(void) const
+{
+	return (this->_invitation);
+}

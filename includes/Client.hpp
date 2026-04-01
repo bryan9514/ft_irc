@@ -29,6 +29,7 @@ private:
 	bool			_hasNick;
 	bool			_hasUser;
 	bool			_registered;
+	std::vector<std::string> _invitation;
 
 public:
 	Client(void);
@@ -60,6 +61,8 @@ public:
 	bool	getHasNick(void) const;
 	bool	getHasUser(void) const;
 	bool	getRegistered(void) const;
+	int		getInvitationSize(void) const;
+	std::vector<std::string>		getInvitations(void) const;
 };
 
 #endif

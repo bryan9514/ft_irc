@@ -36,6 +36,8 @@ enum CmdsError
     // Returned when the target user is not in the specified channel.
     ERR_NOTONCHANNEL = 442,
     // Returned when the client is not on the specified channel.
+	ERR_USERONCHANNEL = 443,
+	// Returned when the invited user is already on the specified channel.
     ERR_NEEDMOREPARAMS = 461,
     // Returned when a command is missing required parameters.
     ERR_ALREADYREGISTERED = 462,
@@ -68,6 +70,10 @@ enum CmdsRPL
     // Returned when its the end of the list of the members.
     RPL_INVITING = 341,
     // Returned when `INVITE` is confirmed.
+	RPL_INVITELIST = 336,
+	// Returned a list of all the invitation received when `INVITE` is typed without args.
+	RPL_ENDOFINVITELIST = 337,
+	// Returned when the list is ended.
 };
 
 

@@ -36,7 +36,7 @@ private:
 	std::map<int, Client>	_clients;
 	std::vector<pollfd>		_pollFds;
 	struct sockaddr_in 		_socketAddress;
-  std::map<std::string, Channel*>  _channels;
+	std::map<std::string, Channel*>  _channels;
 
 	void	createSocket(void);
 	void	setNonBlocking(int fd);

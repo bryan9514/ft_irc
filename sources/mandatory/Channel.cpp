@@ -205,3 +205,29 @@ void	Channel::removeOperatorByString(std::string name)
 			this->removeOperator(_normal_members[i]);
 	}
 }
+
+//utils for Invite
+bool	Channel::IsMembersbyName(std::string name)
+{
+	for (int i = 0; i < this->_members.size(); i++)
+	{
+		if (this->_members[i]->getNickName() == name)
+			return (true);
+	}
+	return (false);
+}
+
+bool		Channel::IsInvitedbyName(std::string name)
+{
+	for (int i = 0; i < this->_invited.size(); i++)
+	{
+		if (this->_invited[i] == name)
+			return (true);
+	}
+	return (false);
+}
+
+void		Channel::addInvited(std::string name)
+{
+	this->_invited.push_back(name);
+}
