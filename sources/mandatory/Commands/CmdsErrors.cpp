@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CmdsErrors.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 21:29:18 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/13 23:27:34 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/04/02 20:20:02 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,53 @@ void controlErrors(Server & server, Client & client, CmdsError code,
 		nick = "*";
 	std::string msg;
 	switch (code) {
-		case ERR_NONICKNAMEGIVEN:
-			msg = ":ircserv 431 * :No nickname given\r\n";
-			break;
-		case ERR_ERRONEUSNICKNAME:
-			msg = ":ircserv 432 " + nick + " " + param + " :Erroneous nickname\r\n";
-			break;
-		case ERR_NICKNAMEINUSE:
-			msg = ":ircserv 433 " + nick + " " + param + " :Nickname is already in use\r\n";
-			break;
-		case ERR_NEEDMOREPARAMS:
-			msg = ":ircserv 461 " + nick + " " + cmd + " :Not enough parameters\r\n";
-			break;
-		case ERR_ALREADYREGISTERED:
-			msg = ":ircserv 462 " + nick + " :You may not reregister\r\n";
-			break;
-		case ERR_PASSWDMISMATCH:
-			msg = ":ircserv 464 " + nick + " :Password incorrect\r\n";
-			break;
-		default:
-			return ;
+    case ERR_NOSUCHNICK:
+	    msg = ":ircserv 401 " + nick + " " + param + " :No such nick\r\n";
+		break;
+    case ERR_NOSUCHCHANNEL:
+		msg = ":ircserv 403 " + nick + " " + param + " :No such channel\r\n";
+		break;
+	case ERR_NONICKNAMEGIVEN:
+		msg = ":ircserv 431 * :No nickname given\r\n";
+		break;
+	case ERR_ERRONEUSNICKNAME:
+		msg = ":ircserv 432 " + nick + " " + param + " :Erroneous nickname\r\n";
+		break;
+	case ERR_NICKNAMEINUSE:
+		msg = ":ircserv 433 " + nick + " " + param + " :Nickname is already in use\r\n";
+		break;
+    case ERR_USERNOTINCHANNEL:
+	    msg = ":ircserv 441 " + nick + " " + param + " :They aren't on that channel\r\n";
+		break;
+    case ERR_NOTONCHANNEL:
+		msg = ":ircserv 442 " + nick + " " + param + " :You're not on that channel\r\n";
+		break;
+	case ERR_USERONCHANNEL:
+		msg = ":ircserv 443 " + nick + " " + cmd + " " + param + " :is already on channel\r\n";
+		break;
+	case ERR_NEEDMOREPARAMS:
+		msg = ":ircserv 461 " + nick + " " + cmd + " :Not enough parameters\r\n";
+		break;
+  	case ERR_ALREADYREGISTERED:
+		msg = ":ircserv 462 " + nick + " :You may not reregister\r\n";
+		break;
+	case ERR_PASSWDMISMATCH:
+		msg = ":ircserv 464 " + nick + " :Password incorrect\r\n";
+		break;
+    case ERR_KEYSET:
+		msg = ":ircserv 467 " + nick + " " + param + " :Channel key already set\r\n";
+		break;
+    case ERR_CHANNELISFULL:
+		msg = ":ircserv 471 " + nick + " " + param + " :Cannot join channel (+l)\r\n";
+		break;
+    case ERR_UNKNOWNMODE:
+		msg = ":ircserv 472 " + nick + " " + param + " :is unknown mode char to me\r\n";
+		break;
+    case ERR_CHANOPRIVSNEEDED:
+		msg = ":ircserv 482 " + nick + " " + param + " :You're not channel operator\r\n";
+		break;
+	default:
+		return ;
 	}
 	if (!msg.empty())
 	    server.sendToClient(client, msg);

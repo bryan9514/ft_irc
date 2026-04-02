@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 12:18:15 by ntome             #+#    #+#             */
-/*   Updated: 2026/03/31 13:21:43 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 20:29:32 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,31 +52,35 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 			continue;
 		}
 		if (!server.hasChannel(channels[i]))
-			server.createChannel(channels[i], client);
-		Channel channel(server.getChannel(channels[i]));
-		if (channel.getRules().getInviteOnly() && !channel.isInvited(&client)) {
+			server.createChannel(channels[i], &client);
+		Channel *channel = server.getChannel(channels[i]);
+		if (channel->getRules().getInviteOnly() && !channel->IsInvitedbyName(client.getRealName())) {
 			printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
 			controlErrors(server, client, ERR_INVITEONLYCHAN, "JOIN");
 			continue;
 		}
-		if (channel.getRules().getPassword() != "" && (i > (int)keys.size() || keys[i] != channel.getRules().getPassword())) {
+		if (channel->getRules().getPassword() != "" && (i >= (int)keys.size() || keys[i] != channel->getRules().getPassword())) {
 			printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
 			controlErrors(server, client, ERR_BADCHANNELKEY, "JOIN");
 			continue;
 		}
-		if (channel.isFull()) {
+		if (channel->isFull()) {
 			printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
 			controlErrors(server, client, ERR_CHANNELISFULL, "JOIN");
 			continue;
 		}
-		channel.addMember(&client);
-		channel.removeInvitation(&client);
-		printMyMsg(SUCCESS, "JOIN", "SUCCES", client.getUserName() + " is joining the channel " + channels[i], client.getFdClient());
-		//TODO envoyer un message a tout les membres du channel pour prevenir de l'arriver du membre.
-		if (channel.getTopic().getIsSet()) {
-			//TODO envoyer le topic a l'user mais je sais pas comment faire.
-			//TODO envoyer le topicwhotime.
+		channel->addMember(&client);
+		if (channel->getMembersSize() == 1)
+			channel->addOperator(&client);
+		channel->removeInvited(client.getRealName());
+		printMyMsg(SUCCESS, "JOIN", "SUCCES", client.getNickName() + " is joining the channel " + channels[i], client.getFdClient());
+		server.sendToClient(client, RPL_JOIN(client.getNickName(), channels[i]) + "\r\n");
+		server.getChannel(channels[i])->broadcastToMembers(server, ":" + client.getNickName() + " JOIN " + channels[i] + "\r\n");
+		if (channel->getTopic().getIsSet()) {
+			server.sendToClient(client, RPL_TOPIC(client.getNickName(), channels[i], channel->getTopic().getTopic()) + "\r\n");
+			server.sendToClient(client, RPL_TOPICWHOTIME(client.getNickName(), channels[i], channel->getTopic().getAuthor()->getNickName(), (channel->getTopic().getTopicTimeString())) + "\r\n");
 		}
-		//TODO envoyer la liste des membres a l'user.
+		server.sendToClient(client, RPL_NAMEREPLY(client.getNickName(), "=", channels[i], channel->getMembers()) + "\r\n");
+		server.sendToClient(client, RPL_ENDOFNAMES(client.getNickName(), channels[i]) + "\r\n");
 	}
 }

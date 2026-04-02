@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 21:07:34 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/13 18:28:37 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/04/02 18:37:38 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,4 +144,14 @@ bool	Client::getHasUser(void) const
 bool	Client::getRegistered(void) const
 {
 	return (_registered);
+}
+
+int		Client::getInvitationSize(void) const
+{
+	return (this->_invitation.size());
+}
+
+std::vector<std::string>		Client::getInvitations(void) const
+{
+	return (this->_invitation);
 }

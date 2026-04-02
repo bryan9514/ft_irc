@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/31 18:32:12 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 18:40:52 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,6 @@ const std::map<int, Client>	&Server::getClients(void) const
 Client	&Server::getClient(int fd)
 {
 	return (_clients[fd]);
-}
-
-Channel &Server::getChannel(std::string name) {
-    std::map<std::string, Channel>::iterator it = _channels.find(name);
-    return it->second;
-}
-
-void	Server::createChannel(std::string name, Client client)
-{
-	this->_channels[name] = Channel(name);
-	this->_channels[name].addMember(&client);
-	this->_channels[name].addOperator(&client);
-}
-
-bool	Server::hasChannel(std::string name) const
-{
-	if (this->_channels.find(name) != this->_channels.end())
-		return (true);
-	return (false);
 }
 
 /* ============================== member functions ========================== */
@@ -111,16 +92,47 @@ void Server::broadcast(const std::string &msg, int excludeFd)
 	}
 }
 
-void	Server::checkRegistration(Client & client)
+void    Server::checkRegistration(Client & client)
 {
-	if (!client.getRegistered() && client.getPassOk() && client.getHasNick() && client.getHasUser())
-	{
-		client.setRegistered(true);
+    if (!client.getRegistered() && client.getPassOk() && client.getHasNick() && client.getHasUser())
+    {
+        client.setRegistered(true);
 
-		std::string nick = client.getNickName();
-		std::string msg = ":ircserv 001 " + nick + " :Welcome to the ircserv Network " 
-			+ nick + "!" + client.getUserName() + "@localhost\r\n";
-		printMyMsg(SUCCESS, "REGISTER", "Success", "client registered", client.getFdClient(), nick);
-		sendToClient(client, msg);
+        std::string nick = client.getNickName();
+        std::string msg = ":ircserv 001 " + nick + " :Welcome to the ircserv Network " + nick + "!" + client.getUserName() + "@localhost\r\n";
+        printMyMsg(SUCCESS, "REGISTER", "Success", "client registered", client.getFdClient(), nick);
+        sendToClient(client, msg);
+    }
+}
+
+//=========================getterChannel
+
+Channel*  Server::getChannel(const std::string &name)
+{
+    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
+    {
+        if (it->first == name)
+            return (it->second);
+    }
+    return (NULL);
+}
+
+bool Server::hasChannel(const std::string &name) const
+{
+	for (std::map<std::string, Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); it++)
+	{
+		if (it->first == name)
+			return (true);
 	}
+	return (false);
+}
+
+Channel*  Server::createChannel(const std::string &name, Client *client)
+{
+	if (hasChannel(name))
+		return (getChannel(name));
+	Channel *newChannel = new Channel(name);
+	newChannel->addMember(client);
+	_channels[name] = newChannel;
+	return (newChannel);
 }

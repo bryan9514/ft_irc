@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/31 13:41:26 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 20:26:14 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,51 +24,53 @@
 #include <vector>       // std::vector
 #include <map>          // std::map
 #include <signal.h>
+#include <sstream>
 
 extern volatile sig_atomic_t gSignalStatus;
 
+class Channel;
+
 class Server
 {
-private:
-	int								_port;
-	int								_serSocketFd;
-	std::string						_pass;
-	std::map<int, Client>			_clients;
-	std::map<std::string, Channel>	_channels;
-	std::vector<pollfd>				_pollFds;
-	struct sockaddr_in 				_socketAddress;
+	private:
+		int								_port;
+		int								_serSocketFd;
+		std::string						_pass;
+		std::map<int, Client>			_clients;
+		std::vector<pollfd>				_pollFds;
+		struct sockaddr_in 				_socketAddress;
+		std::map<std::string, Channel*>	_channels;
 
-	void	createSocket(void);
-	void	setNonBlocking(int fd);
-	void	configureSocket(void);
-	void	setSocketOptions(void);
-	void	bindSocket(void);
-	void	listenSocket(void);
-	
-	void	acceptClient(void);
-	void	handleClientData(int fd);
-	void	removeClient(int fd);
+		void	createSocket(void);
+		void	setNonBlocking(int fd);
+		void	configureSocket(void);
+		void	setSocketOptions(void);
+		void	bindSocket(void);
+		void	listenSocket(void);
+		
+		void	acceptClient(void);
+		void	handleClientData(int fd);
+		void	removeClient(int fd);
 
-	void	processBuffer(Client & client);
+		void	processBuffer(Client & client);
 
-public:
-	Server(int port, const std::string& pass);
-	~Server(void);
+	public:
+		Server(int port, const std::string& pass);
+		~Server(void);
 
-	void	initServer();
-	void	runServer();
-	void	shutdownServer(void);
-	void	sendToClient(Client & client, const std::string & msg);
-	void	broadcast(const std::string &msg, int excludeFd = -1);
-	void	checkRegistration(Client & client);
-	
-	const std::string			&getPass(void) const;
-	const std::map<int, Client>	&getClients(void) const;
-	Client						&getClient(int fd);
-	Channel						&getChannel(std::string name);
-	void						createChannel(std::string name, Client client);
-	bool						hasChannel(std::string name) const;
-
+		void	initServer();
+		void	runServer();
+		void	shutdownServer(void);
+		void	sendToClient(Client & client, const std::string & msg);
+		void	broadcast(const std::string &msg, int excludeFd = -1);
+		void	checkRegistration(Client & client);
+		
+		const std::string					&getPass(void) const;
+		const std::map<int, Client>			&getClients(void) const;
+		Client						        &getClient(int fd);
+		Channel*							getChannel(const std::string &name);
+		bool								hasChannel(const std::string &name) const;
+		Channel*  							createChannel(const std::string &name, Client *client);
 };
 
 void printMyMsg(const std::string & color, const std::string & cmd, const std::string & type,

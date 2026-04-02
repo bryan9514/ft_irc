@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 13:34:14 by ntome             #+#    #+#             */
-/*   Updated: 2026/03/17 14:14:15 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 20:29:03 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,10 @@ bool		Topic::getIsSet(void) const {
 
 int			Topic::getTopicTime(void) const {
 	return this->_topicTime;
+}
+
+std::string	Topic::getTopicTimeString(void) const {
+	std::stringstream ss;
+	ss << this->_topicTime;
+	return ss.str();
 }

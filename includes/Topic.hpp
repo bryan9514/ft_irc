@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 12:53:53 by ntome             #+#    #+#             */
-/*   Updated: 2026/03/17 14:14:03 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 20:26:51 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define TOPIC_HPP
 
 # include <string>
+# include <sstream>
 # include <Client.hpp>
 
 class Topic
@@ -39,6 +40,7 @@ class Topic
 		Client		*getAuthor(void) const;
 		bool		getIsSet(void) const;
 		int			getTopicTime(void) const;
+		std::string	getTopicTimeString(void) const;
 };
 
 #endif

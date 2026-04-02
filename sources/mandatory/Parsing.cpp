@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 01:03:47 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/28 12:20:43 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 19:53:23 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 		return ;
 	std::string cmd = tokens[0];
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
-	std::cout << "cmd: " << cmd << std::endl;
 	if (cmd == "PASS")
 		cmdPass(server, client, tokens);
 	else if (cmd == "NICK")
