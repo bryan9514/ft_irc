@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 12:18:15 by ntome             #+#    #+#             */
-/*   Updated: 2026/04/02 20:29:32 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 20:52:47 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,6 @@
 #include "Client.hpp"
 #include <iostream>
 #include <string>
-
-std::vector<std::string>	splitString(std::string s, char sep)
-{
-	std::vector<std::string>	result;
-	int							start = 0;
-
-	for (int i = 0; i < (int)s.length(); i++) {
-		if (s[i] == sep) {
-			result.push_back(s.substr(start, i - start));
-			start = i + 1;
-		}
-	}
-	result.push_back(s.substr(start, s.length() - start));
-	return (result);
-}
 
 void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens)
 {

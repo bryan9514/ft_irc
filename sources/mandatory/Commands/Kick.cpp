@@ -17,6 +17,61 @@ void	cmdKick(Server &server, Client &client, std::vector<std::string> &tokens)
 {
 	if (tokens.size() < 3)
 	{
+		printMyMsg(ERROR, "KICK", "ERROR", "", client.getFdClient());
+		controlErrors(server, client, ERR_NEEDMOREPARAMS, "KICK");
+		return ;
+	}
+
+	std::string chanName = tokens[1];
+
+	if (!server.hasChannel(chanName))
+	{
+		printMyMsg(ERROR, "KICK", "ERROR", "", client.getFdClient());
+		controlErrors(server, client, ERR_NOSUCHCHANNEL, "KICK", chanName);
+		return ;
+	}
+	Channel *chan = server.getChannel(chanName);
+	if (!chan->isMember(&client))
+	{
+		printMyMsg(ERROR, "KICK", "ERROR", "", client.getFdClient());
+		controlErrors(server, client, ERR_NOTONCHANNEL, "KICK", chanName);
+		return ;
+	}
+	if (!chan->isOperator(&client))
+	{
+		printMyMsg(ERROR, "KICK", "ERROR", "", client.getFdClient());
+		controlErrors(server, client, ERR_CHANOPRIVSNEEDED, "KICK", chanName);
+		return ;
+	}
+	std::vector<std::string> targetNicks = splitString(tokens[2], ',');
+
+	for (int i = 0; i < (int)targetNicks.size(); i++)
+	{
+		std::string targetNick = targetNicks[i];
+		Client *target = findClientByNick(server, targetNick);
+		if (!target || !chan->isMember(target))
+		{
+			printMyMsg(ERROR, "KICK", "ERROR", "", client.getFdClient());
+			controlErrors(server, client, ERR_USERNOTINCHANNEL, "KICK", targetNick);
+			continue ;
+		}
+		if (chan->isOperator(target))
+		{
+			printMyMsg(ERROR, "KICK", "ERROR", "", client.getFdClient());
+			controlErrors(server, client, ERR_CHANOPRIVSNEEDED, "KICK", targetNick);
+			continue ;
+		}
+		std::string reason = "No reason given";
+		//TODO a finir quand je serai rentrer.
+	}
+
+}
+
+/*
+void	cmdKick(Server &server, Client &client, std::vector<std::string> &tokens)
+{
+	if (tokens.size() < 3)
+	{
 		controlErrors(server, client, ERR_NEEDMOREPARAMS, "KICK", "");
 		return;
 	}
@@ -76,3 +131,5 @@ void	cmdKick(Server &server, Client &client, std::vector<std::string> &tokens)
 			   client.getNickName() + " kicked " + targetNick + " from " + chanName,
 			   client.getFdClient(), reason);
 }
+
+*/

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+         #
+#    By: ntome <ntome@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/03/28 12:25:16 by ntome            ###   ########.fr        #
+#    Updated: 2026/04/02 20:40:30 by ntome            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,10 +29,14 @@ M_SOURCES	:=  main.cpp \
 				ServerUtils.cpp \
 				Parsing.cpp \
 				Commands/CmdsErrors.cpp \
-				Commands/Pass.cpp \
-				Commands/Nick.cpp \
-				Commands/User.cpp \
+				Commands/Invite.cpp \
 				Commands/Join.cpp \
+				Commands/Kick.cpp \
+				Commands/Mode.cpp \
+				Commands/Nick.cpp \
+				Commands/Pass.cpp \
+				Commands/PrivMsg.cpp \
+				Commands/User.cpp \
 				Channel.cpp \
 				ChannelRules.cpp \
 				Topic.cpp

@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 01:03:47 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/02 19:53:23 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/02 20:43:50 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,16 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 		cmdUser(server, client, tokens);
 	else if (cmd == "JOIN")
 		cmdJoin(server, client, tokens);
+	else if (cmd == "KICK")
+		cmdKick(server, client, tokens);
+	else if (cmd == "TOPIC")
+		cmdTopic(server, client, tokens);
+	else if (cmd == "INVITE")
+		cmdInvite(server, client, tokens);
+	else if (cmd == "MODE")
+		cmdMode(server, client, tokens);
+	else if (cmd == "PRIVMSG")
+		cmdPrivMsg(server, client, tokens);
+	else if (cmd == "QUIT")
+		cmdQuit(server, client, tokens);
 }
