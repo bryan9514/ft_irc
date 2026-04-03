@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 01:03:47 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/02 20:43:50 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/03 12:00:27 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <cctype>
 #include <vector>
 #include <string>
-#include <iostream>
 
 std::vector<std::string>	Tokenizer(std::string & line)
 {

@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 23:22:26 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/02 20:20:52 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/03 13:06:17 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,12 @@ enum CmdsError
 	// Returned when JOIN has a non channel name as input (like "fu" -> "#fu").
     ERR_NOSUCHNICK = 401,
     // Returned when the nick cannot be found.
+	ERR_CANNOTSENDTOCHAN = 404,
+	//Returned when a message cannot be sent to a channel
+	ERR_NORECIPIENT = 411,
+	//Returned when no target is given to a command (e.g. PRIVMSG without <target>).
+	ERR_NOTEXTTOSEND = 412,
+	//Returned when no message text is provided (e.g. PRIVMSG without <message>).
     ERR_NONICKNAMEGIVEN = 431,
     // Returned when the NICK command is sent without a nickname parameter.
     ERR_ERRONEUSNICKNAME = 432,

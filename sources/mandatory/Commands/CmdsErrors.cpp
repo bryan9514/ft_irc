@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 21:29:18 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/02 20:20:02 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/03 13:10:48 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,19 @@ void controlErrors(Server & server, Client & client, CmdsError code,
 	std::string msg;
 	switch (code) {
     case ERR_NOSUCHNICK:
-	    msg = ":ircserv 401 " + nick + " " + param + " :No such nick\r\n";
+	    msg = ":ircserv 401 " + nick + " " + param + " :No such nick/channel\r\n";
 		break;
     case ERR_NOSUCHCHANNEL:
 		msg = ":ircserv 403 " + nick + " " + param + " :No such channel\r\n";
+		break;
+	case ERR_CANNOTSENDTOCHAN:
+		msg = ":ircserv 404 " + nick + " " + param + " :Cannot send to channel\r\n";
+		break;
+	case ERR_NORECIPIENT:
+		msg = ":ircserv 411 " + nick + " :No recipient given (PRIVMSG)\r\n";
+		break;
+	case ERR_NOTEXTTOSEND:
+		msg = ":ircserv 412 " + nick + " :No text to send\r\n";
 		break;
 	case ERR_NONICKNAMEGIVEN:
 		msg = ":ircserv 431 * :No nickname given\r\n";
@@ -84,3 +93,6 @@ void controlErrors(Server & server, Client & client, CmdsError code,
 	if (!msg.empty())
 	    server.sendToClient(client, msg);
 }
+
+
+
