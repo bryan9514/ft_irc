@@ -6,7 +6,7 @@
 #    By: ntome <ntome@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/04/02 20:40:30 by ntome            ###   ########.fr        #
+#    Updated: 2026/04/03 17:25:15 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,8 @@ M_SOURCES	:=  main.cpp \
 				Commands/Mode.cpp \
 				Commands/Nick.cpp \
 				Commands/Pass.cpp \
-				Commands/PrivMsg.cpp \
+				Commands/Privmsg.cpp \
+				SplitString.cpp \
 				Commands/User.cpp \
 				Channel.cpp \
 				ChannelRules.cpp \

@@ -6,10 +6,11 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 11:04:27 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/03 16:22:37 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/04/03 17:05:54 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Channel.hpp"
 #include "IrcCodes.hpp"
 #include "Server.hpp"
 #include "Client.hpp"
@@ -41,32 +42,21 @@ static bool	checkTokens(Server & server, Client & client, std::vector<std::strin
 
 static void isChannelMsg(Server & server, Client & client, std::string & target, std::string & message)
 {
-    Channel *chan = server.getChannel(target);
+	Channel *chan = server.getChannel(target);
 
-    if (!chan) {
-        controlErrors(server, client, ERR_NOSUCHCHANNEL, "", target);
-        printMyMsg(ERROR, "PRIVMSG", "Error", "channel not found", client.getFdClient(), target);
-        return;
-    }
-
-    if (!chan->isMember(&client)) {
-        controlErrors(server, client, ERR_CANNOTSENDTOCHAN, "", target);
-        printMyMsg(ERROR, "PRIVMSG", "Error", "not in channel", client.getFdClient(), target);
-        return;
-    }
-
-    std::string msg = ":" + client.getNickName() + "!" +
-                      client.getUserName() + "@localhost PRIVMSG " +
-                      target + " :" + message + "\r\n";
-
-    // enviar a todos menos al sender
-    std::map<int, Client*> members = chan->getMembers(); // ⚠️ si no tienes esto, te explico abajo
-
-    for (std::map<int, Client*>::iterator it = members.begin(); it != members.end(); ++it)
-    {
-        if (it->first != client.getFdClient())
-            server.sendToClient(*it->second, msg);
-    }
+	if (!chan) {
+		controlErrors(server, client, ERR_NOSUCHCHANNEL, "", target);
+		printMyMsg(ERROR, "PRIVMSG", "Error", "channel not found", client.getFdClient(), target);
+		return ;
+	}
+	if (!chan->isMember(&client)) {
+		controlErrors(server, client, ERR_CANNOTSENDTOCHAN, "", target);
+		printMyMsg(ERROR, "PRIVMSG", "Error", "not in channel", client.getFdClient(), target);
+		return ;
+	}
+	std::string msg = ":" + client.getNickName() + "!" + client.getUserName() + 
+			"@localhost PRIVMSG " + target + " :" + message + "\r\n";
+	chan->broadcastToMembers(server, msg);
 }
 
 static Client *findClientByNick(Server &server, const std::string &nick)
@@ -82,19 +72,16 @@ static Client *findClientByNick(Server &server, const std::string &nick)
 
 static void isUserMsg(Server & server, Client & client, std::string & target, std::string & message)
 {
-    Client *targetClient = findClientByNick(server, target);
+	Client *targetClient = findClientByNick(server, target);
 
-    if (!targetClient) {
-        controlErrors(server, client, ERR_NOSUCHNICK, "", target);
-        printMyMsg(ERROR, "PRIVMSG", "Error", "nick not found", client.getFdClient(), target);
-        return;
-    }
-
-    std::string msg = ":" + client.getNickName() + "!" +
-                      client.getUserName() + "@localhost PRIVMSG " +
-                      target + " :" + message + "\r\n";
-
-    server.sendToClient(*targetClient, msg);
+	if (!targetClient) {
+		controlErrors(server, client, ERR_NOSUCHNICK, "", target);
+		printMyMsg(ERROR, "PRIVMSG", "Error", "nick not found", client.getFdClient(), target);
+		return ;
+	}
+	std::string msg = ":" + client.getNickName() + "!" + client.getUserName()
+			+ "@localhost PRIVMSG " + target + " :" + message + "\r\n";
+	server.sendToClient(*targetClient, msg);
 }
 
 void	cmdPrivMsg(Server & server, Client & client, std::vector<std::string> & tokens)

@@ -6,14 +6,13 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 12:18:15 by ntome             #+#    #+#             */
-/*   Updated: 2026/04/02 20:52:47 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/03 17:07:30 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "IrcCodes.hpp"
 #include "Client.hpp"
-#include <iostream>
 #include <string>
 
 void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens)
