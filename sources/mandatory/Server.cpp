@@ -6,14 +6,14 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/02 18:40:52 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/04 14:51:22 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
 #include <string>
-#include <iostream>
 
 /* ======================== parameter constructor =========================== */
 Server::Server(int port, const std::string& pass) :
@@ -49,6 +49,9 @@ void Server::shutdownServer(void)
 	for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 		close(it->first);
 	_clients.clear();
+	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+		delete it->second;
+	_channels.clear();
 	_pollFds.clear();
 	if (_serSocketFd != -1) {
 		close(_serSocketFd);
@@ -66,6 +69,8 @@ void	Server::processBuffer(Client & client)
 		std::string	line = buffer.substr(0, pos);
 		buffer.erase(0, pos + 2);
 		handleCmd(*this, client, line);
+		if (client.getToDelete())
+			break;
 	}
 }
 
@@ -135,4 +140,20 @@ Channel*  Server::createChannel(const std::string &name, Client *client)
 	newChannel->addMember(client);
 	_channels[name] = newChannel;
 	return (newChannel);
+}
+
+void Server::disconnectClient(Client &client, const std::string &reason)
+{
+	std::string msg = ":" + client.getNickName() + "!" + client.getUserName() +
+				"@localhost QUIT :" + reason + "\r\n";
+	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		Channel *chan = it->second;
+		if (chan->isMember(&client)) {
+			chan->broadcastToMembersExcept(*this, msg, client.getFdClient());
+			chan->removeNormalMember(&client);
+			chan->removeMember(&client);
+		}
+	}
+	removeClient(client.getFdClient());
 }

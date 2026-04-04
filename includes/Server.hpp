@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/02 20:52:43 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/03 22:53:57 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #include <vector>       // std::vector
 #include <map>          // std::map
 #include <signal.h>
-#include <sstream>
 
 extern volatile sig_atomic_t gSignalStatus;
 
@@ -50,7 +49,6 @@ class Server
 		
 		void	acceptClient(void);
 		void	handleClientData(int fd);
-		void	removeClient(int fd);
 
 		void	processBuffer(Client & client);
 
@@ -63,8 +61,10 @@ class Server
 		void	shutdownServer(void);
 		void	sendToClient(Client & client, const std::string & msg);
 		void	broadcast(const std::string &msg, int excludeFd = -1);
+		void	removeClient(int fd);
 		void	checkRegistration(Client & client);
-		
+		void	disconnectClient(Client &client, const std::string &reason);
+
 		const std::string					&getPass(void) const;
 		const std::map<int, Client>			&getClients(void) const;
 		Client						        &getClient(int fd);

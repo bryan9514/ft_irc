@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 21:07:34 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/02 18:37:38 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/03 23:44:07 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ Client::Client() :
 	_passOk(false),
 	_hasNick(false),
 	_hasUser(false),
-	_registered(false)
+	_registered(false),
+	_toDelete(false)
 {}
 
 /* ================================ setters ================================= */
@@ -87,6 +88,16 @@ void	Client::appendOutBuffer(const std::string &msg)
 void	Client::appendBuffer(const std::string & newData)
 {
 	_buffer += newData;
+}
+
+void	Client::setToDelete(bool valor)
+{
+	_toDelete = valor;
+}
+
+void	Client::setQuitReason(const std::string &reason)
+{
+    _quitReason = reason;
 }
 
 /* ================================= getters ================================ */
@@ -154,4 +165,14 @@ int		Client::getInvitationSize(void) const
 std::vector<std::string>		Client::getInvitations(void) const
 {
 	return (this->_invitation);
+}
+
+bool	Client::getToDelete() const
+{
+	return _toDelete;
+}
+
+const	std::string &Client::getQuitReason(void) const
+{
+    return _quitReason;
 }

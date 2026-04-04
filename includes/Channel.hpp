@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 11:40:36 by ntome             #+#    #+#             */
-/*   Updated: 2026/04/02 20:09:19 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/04 14:41:35 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <algorithm> //std::find
 # include <iostream> //std::cout
 # include <Client.hpp>
-# include <Server.hpp>
 # include <Topic.hpp>
 # include <ChannelRules.hpp>
 
@@ -59,6 +58,7 @@ class Channel
 		bool		isNormalMember(Client *client) const;
 
 		void		broadcastToMembers(Server &server, const std::string &msg);
+		void		broadcastToMembersExcept(Server &server, const std::string &msg, int excludeFd);
 		bool		getInviteOnly(void) const;
 		bool        getTopicSetRule(void) const;
 		std::string getPassword(void) const;

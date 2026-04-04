@@ -6,13 +6,14 @@
 /*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 10:59:08 by brturcio          #+#    #+#             */
-/*   Updated: 2026/03/16 11:26:56 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/04 13:58:12 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"   // definition of the Server class
 #include "Client.hpp"   // definition of the Client class
 #include "IrcCodes.hpp" // definition of colors
+#include <algorithm>
 #include <cerrno>       // errno values (EAGAIN, EWOULDBLOCK, etc.)
 #include <stdexcept>    // std::runtime_error for throwing exceptions
 #include <sys/poll.h>   // poll() and struct pollfd
@@ -122,8 +123,10 @@ void Server::handleClientData(int fd)
 			if (it != _clients.end())
 				it->second.appendBuffer(std::string(buffer, bytes));
 		} else if (bytes == 0) {
-			removeClient(fd);
-			return;
+			std::map<int, Client>::iterator it = _clients.find(fd);
+			if (it != _clients.end())
+				disconnectClient(it->second, "Quit: Connection closed");
+			return ;
 		} else {
 			if (errno == EAGAIN || errno == EWOULDBLOCK)
 				break;
@@ -131,7 +134,16 @@ void Server::handleClientData(int fd)
 				throw std::runtime_error("Error: recv failed");
 		}
 	}
-	processBuffer(_clients[fd]);
+	std::map<int, Client>::iterator it = _clients.find(fd);
+	if (it != _clients.end())
+	{
+		processBuffer(it->second);
+		if (it != _clients.end() && it->second.getToDelete())
+		{
+			disconnectClient(it->second, it->second.getQuitReason());
+			return ;
+		}
+	}
 }
 
 /* ======================= server main loop ======================= */
@@ -162,30 +174,44 @@ void	Server::runServer(void)
 			throw std::runtime_error("Error: poll failed");
 		}
 		for (size_t i = 0; i < _pollFds.size(); i++) {
-			if (_pollFds[i].fd != _serSocketFd && (_pollFds[i].revents & (POLLERR | POLLHUP | POLLNVAL))) {
-				removeClient(_pollFds[i].fd);
+			int currentFd = _pollFds[i].fd;
+			short currentRevents = _pollFds[i].revents;
+			if (currentFd != _serSocketFd && (currentRevents & (POLLERR | POLLHUP | POLLNVAL))) {
+				removeClient(currentFd);
 				--i;
 				continue;
 			}
-			if (_pollFds[i].revents & POLLIN) {
-				if (_pollFds[i].fd == _serSocketFd)
+			if (currentRevents & POLLIN) {
+				if (currentFd == _serSocketFd)
 					acceptClient();
 				else
-					handleClientData(_pollFds[i].fd);
+					handleClientData(currentFd);
+				if (currentFd != _serSocketFd) {
+					if (i >= _pollFds.size() || _pollFds[i].fd != currentFd) {
+						--i;
+						continue;
+					}
+				}
 			}
-			if (_pollFds[i].revents & POLLOUT) {
-				Client		&client = getClient(_pollFds[i].fd);
-				std::string	&out = client.getOutBuffer();
+			if (currentRevents & POLLOUT) {
+				std::map<int, Client>::iterator	it = _clients.find(currentFd);
+				if (it == _clients.end()) {
+					if (i < _pollFds.size() && _pollFds[i].fd == currentFd)
+						_pollFds[i].revents = 0;
+					continue;
+				}
+				std::string	&out = it->second.getOutBuffer();
 				if (!out.empty())
 				{
-					ssize_t sent = send(_pollFds[i].fd, out.c_str(), out.size(), 0);
+					ssize_t sent = send(currentFd, out.c_str(), out.size(), 0);
 					if (sent > 0)
 						out.erase(0, sent);
 				}
-				if (out.empty())
+				if (out.empty() && i < _pollFds.size() && _pollFds[i].fd == currentFd)
 					_pollFds[i].events &= ~POLLOUT;
 			}
-			_pollFds[i].revents = 0;
+			if (i < _pollFds.size() && _pollFds[i].fd == currentFd)
+				_pollFds[i].revents = 0;
 		}
 	}
 }

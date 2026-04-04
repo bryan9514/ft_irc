@@ -6,7 +6,7 @@
 /*   By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/03 11:04:27 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/03 17:05:54 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/04/04 14:42:17 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void isChannelMsg(Server & server, Client & client, std::string & target,
 	}
 	std::string msg = ":" + client.getNickName() + "!" + client.getUserName() + 
 			"@localhost PRIVMSG " + target + " :" + message + "\r\n";
-	chan->broadcastToMembers(server, msg);
+	chan->broadcastToMembersExcept(server, msg, client.getFdClient());
 }
 
 static Client *findClientByNick(Server &server, const std::string &nick)

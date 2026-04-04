@@ -6,11 +6,12 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 14:56:59 by ntome             #+#    #+#             */
-/*   Updated: 2026/04/02 20:29:26 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/04 14:41:09 by brturcio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include "Server.hpp"
 
 Channel::Channel(void)
 {
@@ -110,6 +111,15 @@ void Channel::broadcastToMembers(Server &server, const std::string &msg)
 {
     for (std::map<int, Client*>::iterator it = _members.begin(); it != _members.end(); it++)
         server.sendToClient(*it->second, msg);
+}
+
+void Channel::broadcastToMembersExcept(Server &server, const std::string &msg, int excludeFd)
+{
+	for (std::map<int, Client*>::iterator it = _members.begin(); it != _members.end(); ++it)
+	{
+		if (it->first != excludeFd)
+			server.sendToClient(*it->second, msg);
+	}
 }
 
 void	Channel::applyMode(Server &server, Client &client, std::vector<std::string> &tokens)
