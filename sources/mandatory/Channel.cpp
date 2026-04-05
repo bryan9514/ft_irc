@@ -226,7 +226,10 @@ void	Channel::addOperatorByString(std::string name)
 	for (int i = 0; i < (int)this->_normal_members.size(); i++)
 	{
 		if (this->_normal_members[i]->getNickName() == name)
-			this->addOperator(_normal_members[i]);
+    {
+			this->addOperator(this->_normal_members[i]);
+      this->removeNormalMember(this->_normal_members[i]);
+    }
 	}
 }
 

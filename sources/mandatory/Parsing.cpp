@@ -71,8 +71,8 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 	// 	cmdTopic(server, client, tokens);
 	// else if (cmd == "INVITE")
 	// 	cmdInvite(server, client, tokens);
-	// else if (cmd == "MODE")
-	// 	cmdMode(server, client, tokens);
+  else if (cmd == "MODE")
+    cmdMode(server, client, tokens);
 	else if (cmd == "PRIVMSG")
 		cmdPrivMsg(server, client, tokens);
 	else if (cmd == "QUIT")
