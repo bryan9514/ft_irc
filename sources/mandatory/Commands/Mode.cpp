@@ -53,7 +53,7 @@ void  cmdMode(Server &server, Client &client, std::vector<std::string> &tokens)
 	}
 	if ((int)tokens.size() == 2)
 	{
-   server.sendToClient(client, RPL_CHANNELMODEIS(client.getNickName(), channel->getName(), findChannelMode(channel)));
+		server.sendToClient(client, RPL_CHANNELMODEIS(client.getNickName(), channel->getName(), findChannelMode(channel)));
 		return ;
 	}
 	if (!channel->isOperator(&client))

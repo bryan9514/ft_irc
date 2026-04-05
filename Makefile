@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ntome <ntome@student.42.fr>                +#+  +:+       +#+         #
+#    By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/04/03 21:24:12 by brturcio         ###   ########.fr        #
+#    Updated: 2026/04/05 12:13:57 by ntome            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ M_SOURCES	:=  main.cpp \
 				Client.cpp \
 				ServerUtils.cpp \
 				Parsing.cpp \
+				Commands/Bot_bonus.cpp \
 				Commands/CmdsErrors.cpp \
 				Commands/Invite.cpp \
 				Commands/Join.cpp \
@@ -41,7 +42,7 @@ M_SOURCES	:=  main.cpp \
 				Commands/User.cpp \
 				Channel.cpp \
 				ChannelRules.cpp \
-				Topic.cpp
+				Topic.cpp 
 B_SOURCES	:= 
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))

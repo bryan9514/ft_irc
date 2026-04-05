@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 14:57:12 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/03 22:53:57 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/04/05 12:08:40 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ void	cmdInvite(Server &server, Client &client, std::vector<std::string> &tokens)
 void	cmdMode(Server &server, Client &client, std::vector<std::string> &tokens);
 void	cmdPrivMsg(Server &server, Client &client, std::vector<std::string> &tokens);
 void	cmdQuit(Server &server, Client &client, std::vector<std::string> &tokens);
+void	cmdBot(Server &server, Client &client, std::vector<std::string> &tokens);
 
 std::vector<std::string>	splitString(std::string s, char sep);
 

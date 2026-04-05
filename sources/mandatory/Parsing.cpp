@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 01:03:47 by brturcio          #+#    #+#             */
-/*   Updated: 2026/04/03 20:28:25 by brturcio         ###   ########.fr       */
+/*   Updated: 2026/04/05 12:08:57 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,12 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 	// 	cmdTopic(server, client, tokens);
 	// else if (cmd == "INVITE")
 	// 	cmdInvite(server, client, tokens);
-  else if (cmd == "MODE")
-    cmdMode(server, client, tokens);
+	else if (cmd == "MODE")
+    	cmdMode(server, client, tokens);
 	else if (cmd == "PRIVMSG")
 		cmdPrivMsg(server, client, tokens);
 	else if (cmd == "QUIT")
 		cmdQuit(server, client, tokens);
+	else if (cmd == "/BOT")
+		cmdBot(server, client, tokens);
 }
