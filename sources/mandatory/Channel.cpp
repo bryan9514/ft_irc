@@ -172,6 +172,7 @@ void	Channel::applyMode(Server &server, Client &client, std::vector<std::string>
 			return ;
 		}
 	}
+	printMyMsg(INFO, "MODE", "Success", modes + " modes string added on channel " + this->getName(), client.getFdClient());
 }
 
 //Getter of rules
@@ -223,22 +224,19 @@ void    Channel::setUserLimit(int limit)
 //utils for Mode
 void	Channel::addOperatorByString(std::string name)
 {
-	for (int i = 0; i < (int)this->_normal_members.size(); i++)
+	for (std::map<int, Client*>::iterator it = _members.begin(); it != _members.end(); it++)
 	{
-		if (this->_normal_members[i]->getNickName() == name)
-    {
-			this->addOperator(this->_normal_members[i]);
-      this->removeNormalMember(this->_normal_members[i]);
-    }
+		if (it->second->getNickName() == name)
+			this->addOperator(it->second);
 	}
 }
 
 void	Channel::removeOperatorByString(std::string name)
 {
-	for (int i = 0; i < (int)this->_normal_members.size(); i++)
+	for (std::map<int, Client*>::iterator it = _members.begin(); it != _members.end(); it++)
 	{
-		if (this->_normal_members[i]->getNickName() == name)
-			this->removeOperator(_normal_members[i]);
+		if (it->second->getNickName() == name)
+			this->removeOperator(it->second);
 	}
 }
 

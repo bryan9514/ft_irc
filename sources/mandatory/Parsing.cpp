@@ -52,7 +52,7 @@ std::vector<std::string>	Tokenizer(std::string & line)
 void	handleCmd(Server & server, Client & client, std::string & line)
 {
 	std::vector<std::string>	tokens = Tokenizer(line);
-	
+
 	if (tokens.empty())
 		return ;
 	std::string cmd = tokens[0];
@@ -65,8 +65,8 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 		cmdUser(server, client, tokens);
 	else if (cmd == "JOIN")
 		cmdJoin(server, client, tokens);
-	// else if (cmd == "KICK")
-	// 	cmdKick(server, client, tokens);
+	else if (cmd == "KICK")
+	 	cmdKick(server, client, tokens);
 	// else if (cmd == "TOPIC")
 	// 	cmdTopic(server, client, tokens);
 	// else if (cmd == "INVITE")

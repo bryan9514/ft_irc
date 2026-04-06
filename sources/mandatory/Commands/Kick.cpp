@@ -62,9 +62,26 @@ void	cmdKick(Server &server, Client &client, std::vector<std::string> &tokens)
 			continue ;
 		}
 		std::string reason = "No reason given";
-		//TODO a finir quand je serai rentrer.
+		if (tokens.size() >= 4) {
+			std::string raw = tokens[3];
+			if (!raw.empty() && raw[0] == ':')
+				raw = raw.substr(1);
+			for (size_t i = 4; i < tokens.size(); ++i)
+				raw += " " + tokens[i];
+			if (!raw.empty())
+				reason = raw;
+		}
+		std::string kickMsg = ":" + client.getNickName()
+		+ "!" + client.getUserName()
+		+ "@ircserv KICK "
+		+ chanName + " " + target->getUserName()
+		+ " :" + reason + "\r\n";
+		chan->removeMember(target);
+		chan->broadcastToMembersExcept(server, kickMsg, client.getFdClient());
+		printMyMsg(INFO, "KICK", "CMD",
+		  	   client.getNickName() + " kicked " + targetNick + " from " + chanName,
+		  	   client.getFdClient(), reason);
 	}
-
 }
 
 /*

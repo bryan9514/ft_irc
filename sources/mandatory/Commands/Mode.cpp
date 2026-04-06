@@ -66,6 +66,6 @@ void  cmdMode(Server &server, Client &client, std::vector<std::string> &tokens)
 	std::string msg = ":" + client.getNickName() + "!" + client.getUserName() + "@localhost MODE " + tokens[1];
 	for (size_t j = 2; j < tokens.size(); j++)
     msg += " " + tokens[j];
-  msg += "\r\n";
-  channel->broadcastToMembersExcept(server, msg, client.getFdClient());
+	msg += "\r\n";
+	channel->broadcastToMembersExcept(server, msg, client.getFdClient());
 }
