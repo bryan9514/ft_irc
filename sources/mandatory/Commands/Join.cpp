@@ -57,7 +57,7 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 		if (channel->getMembersSize() == 1)
 			channel->addOperator(&client);
 		channel->removeInvited(client.getRealName());
-		printMyMsg(SUCCESS, "JOIN", "SUCCES", client.getNickName() + " is joining the channel " + channels[i], client.getFdClient());
+		printMyMsg(SUCCESS, "JOIN", "Success", client.getNickName() + " is joining the channel " + channels[i], client.getFdClient());
 		server.sendToClient(client, RPL_JOIN(client.getNickName(), channels[i]) + "\r\n");
 		server.getChannel(channels[i])->broadcastToMembers(server, ":" + client.getNickName() + " JOIN " + channels[i] + "\r\n");
 		if (channel->getTopic().getIsSet()) {

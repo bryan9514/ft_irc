@@ -176,3 +176,9 @@ const	std::string &Client::getQuitReason(void) const
 {
     return _quitReason;
 }
+
+void	Client::addInvitation(std::string invitation)
+{
+	this->_invitation.push_back(invitation);
+	return ;
+}

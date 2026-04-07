@@ -70,6 +70,7 @@ class Client
 		int		getInvitationSize(void) const;
 		bool	getToDelete() const;
 		std::vector<std::string>		getInvitations(void) const;
+		void							addInvitation(std::string invitation);
 };
 
 #endif

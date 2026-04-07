@@ -40,14 +40,14 @@ void  cmdMode(Server &server, Client &client, std::vector<std::string> &tokens)
 {
 	if ((int)tokens.size() < 2)
 	{
-		printMyMsg(ERROR, "mode", "ERROR", "missing argument", client.getFdClient());
+		printMyMsg(ERROR, "MODE", "ERROR", "missing argument", client.getFdClient());
 		controlErrors(server, client, ERR_NEEDMOREPARAMS, "mode");
 		return;
 	}
 	Channel *channel = server.getChannel(tokens[1]);
 	if (!channel)
 	{
-		printMyMsg(ERROR, "mode", "ERROR", "no such channel", client.getFdClient());
+		printMyMsg(ERROR, "MODE", "ERROR", "no such channel", client.getFdClient());
 		controlErrors(server, client, ERR_NOSUCHCHANNEL, "mode");
 		return;
 	}
@@ -58,8 +58,8 @@ void  cmdMode(Server &server, Client &client, std::vector<std::string> &tokens)
 	}
 	if (!channel->isOperator(&client))
 	{
-		printMyMsg(ERROR, "mode", "ERROR", "you're not operator", client.getFdClient());
-		controlErrors(server, client, ERR_CHANOPRIVSNEEDED, "mode", channel->getName());
+		printMyMsg(ERROR, "MODE", "ERROR", "you're not operator", client.getFdClient());
+		controlErrors(server, client, ERR_CHANOPRIVSNEEDED, "MODE", channel->getName());
 		return ;
 	}
 	channel->applyMode(server, client, tokens);
