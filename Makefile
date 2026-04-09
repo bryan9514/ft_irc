@@ -3,23 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+         #
+#    By: brturcio <brturcio@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/27 10:15:40 by brturcio          #+#    #+#              #
-#    Updated: 2026/04/05 12:13:57 by ntome            ###   ########.fr        #
+#    Updated: 2026/04/09 22:25:14 by brturcio         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:= ircserv
-BONUS		:= ircserv_bonus
 CC			:= c++
 CFLAGS		:= -Wall -Wextra -Werror -std=c++98 -g
 
-DIR_SRCS_M	:= sources/mandatory/
-DIR_SRCS_B	:= sources/bonus/
+DIR_SRCS_M	:= sources/
 
-DIR_OBJS_M	:= objs/mandatory/
-DIR_OBJS_B	:= objs/bonus/
+DIR_OBJS_M	:= objs/
 
 M_SOURCES	:=  main.cpp \
 				Server.cpp \
@@ -43,11 +40,9 @@ M_SOURCES	:=  main.cpp \
 				Commands/User.cpp \
 				Channel.cpp \
 				ChannelRules.cpp \
-				Topic.cpp 
-B_SOURCES	:= 
+				Topic.cpp
 
 M_OBJECTS	:= $(addprefix $(DIR_OBJS_M), $(M_SOURCES:.cpp=.o))
-B_OBJECTS	:= $(addprefix $(DIR_OBJS_B), $(B_SOURCES:.cpp=.o))
 
 INCLUDES	:= -Iincludes
 
@@ -58,12 +53,8 @@ BLUE  := $(shell printf '\033[38;5;81m')
 
 M_TOTAL		:= $(words $(M_SOURCES))
 M_COUNT		:= 0
-B_TOTAL		:= $(words $(B_SOURCES))
-B_COUNT		:= 0
 
 all: $(NAME)
-
-bonus: $(BONUS)
 
 $(DIR_OBJS_M)%.o: $(DIR_SRCS_M)%.cpp
 	@mkdir -p $(dir $@)
@@ -72,33 +63,20 @@ $(DIR_OBJS_M)%.o: $(DIR_SRCS_M)%.cpp
 	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \
 	$$(( $(M_COUNT) * 100 / $(M_TOTAL) )) $<
 
-$(DIR_OBJS_B)%.o: $(DIR_SRCS_B)%.cpp
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-	@$(eval B_COUNT=$(shell echo $$(( $(B_COUNT) + 1 ))))
-	@printf "$(GREEN)(%3d%%)$(RESET) compiling $(BLUE)%s$(RESET)\n" \
-	$$(( $(B_COUNT) * 100 / $(B_TOTAL) )) $<
-
 $(NAME): $(M_OBJECTS)
 	@$(CC) $(CFLAGS) $(M_OBJECTS) -o $(NAME)
 	@printf "$(GREEN)$(NAME) created successfully ✔$(RESET)\n"
-
-$(BONUS): $(B_OBJECTS)
-	@$(CC) $(CFLAGS) $(B_OBJECTS) -o $(BONUS)
-	@printf "$(GREEN)$(BONUS) created successfully ✔$(RESET)\n"
 
 clean:
 	@rm -rf objs
 	@printf "$(GREEN)Objects cleaned ✔$(RESET)\n"
 
 fclean: clean
-	@rm -rf $(NAME) $(BONUS)
+	@rm -rf $(NAME)
 	@printf "$(GREEN)Executables cleaned ✔$(RESET)\n"
 
 re: fclean all
 
-rebonus: fclean bonus
-
-.PHONY: all clean fclean re bonus rebonus
+.PHONY: all clean fclean re
 
 
