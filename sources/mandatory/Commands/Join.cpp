@@ -31,7 +31,7 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 	
 	for (int i = 0; i < (int)channels.size(); i++) {
 		if (channels[i].empty() || channels[i][0] != '#') {
-			printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
+			printMyMsg(ERROR, "JOIN", "ERROR", "Channel is inexistant or out of range", client.getFdClient());
 			controlErrors(server, client, ERR_NOSUCHCHANNEL, "JOIN");
 			continue;
 		}
@@ -39,17 +39,19 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 			server.createChannel(channels[i], &client);
 		Channel *channel = server.getChannel(channels[i]);
 		if (channel->getRules().getInviteOnly() && !channel->IsInvitedbyName(client.getRealName())) {
-			printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
+			printMyMsg(ERROR, "JOIN", "ERROR", "Invite only channel ", client.getFdClient());
 			controlErrors(server, client, ERR_INVITEONLYCHAN, "JOIN");
 			continue;
 		}
 		if (channel->getRules().getPassword() != "" && (i >= (int)keys.size() || keys[i] != channel->getRules().getPassword())) {
-			printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
+			printMyMsg(ERROR, "JOIN", "ERROR", "Wrong channel key", client.getFdClient());
 			controlErrors(server, client, ERR_BADCHANNELKEY, "JOIN");
+			for (int i = 0; i < (int)keys.size(); i++)
+				std::cout << keys[i] << std::endl;
 			continue;
 		}
 		if (channel->isFull()) {
-			printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
+			printMyMsg(ERROR, "JOIN", "ERROR", "Channel is full ", client.getFdClient());
 			controlErrors(server, client, ERR_CHANNELISFULL, "JOIN");
 			continue;
 		}
