@@ -24,12 +24,6 @@ void	cmdTopic(Server &server, Client &client, std::vector<std::string> &tokens)
 		controlErrors(server, client, ERR_NOTONCHANNEL, "TOPIC", chan->getName());
 		return;
 	}
-	if (chan->getTopicSetRule() && !chan->isOperator(&client))
-	{
-		printMyMsg(ERROR, "TOPIC", "ERROR", "isn't operator to perform the command", client.getFdClient());
-		controlErrors(server, client, ERR_CHANOPRIVSNEEDED, "TOPIC", chan->getName());
-		return;
-	}
 	if (tokens.size() == 2)
 	{
 		if (chan->getCpTopic().getIsSet()) {
@@ -39,6 +33,12 @@ void	cmdTopic(Server &server, Client &client, std::vector<std::string> &tokens)
 		else
 			server.sendToClient(client, RPL_NOTOPIC(client.getNickName(), chan->getName()));
 		return ;
+	}
+	if (chan->getTopicSetRule() && !chan->isOperator(&client))
+	{
+		printMyMsg(ERROR, "TOPIC", "ERROR", "isn't operator to perform the command", client.getFdClient());
+		controlErrors(server, client, ERR_CHANOPRIVSNEEDED, "TOPIC", chan->getName());
+		return;
 	}
 	else if (tokens.size() >= 3)
 	{
@@ -61,5 +61,5 @@ void	cmdTopic(Server &server, Client &client, std::vector<std::string> &tokens)
 		chan->getCpTopic().setTopicTime(t);
 		chan->broadcastToMembers(server, RPL_TOPIC(client.getNickName(), chan->getName(), chan->getCpTopic().getTopic()));
 		printMyMsg(SUCCESS, "TOPIC", "Success", "New Topic provided on " + chan->getName(), client.getFdClient());
-		}
+	}
 }
