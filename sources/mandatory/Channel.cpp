@@ -103,8 +103,14 @@ ChannelRules	Channel::getRules(void) const {
 	return (this->_rules);
 }
 
-Topic			Channel::getTopic(void) const {
-	return (this->_topic);
+Topic& Channel::getCpTopic(void)
+{
+    return _topic;
+}
+
+Topic Channel::getTopic(void) const
+{
+    return _topic;
 }
 //Modes utility
 void Channel::broadcastToMembers(Server &server, const std::string &msg)

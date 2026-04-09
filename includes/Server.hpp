@@ -91,7 +91,7 @@ void	cmdMode(Server &server, Client &client, std::vector<std::string> &tokens);
 void	cmdPrivMsg(Server &server, Client &client, std::vector<std::string> &tokens);
 void	cmdQuit(Server &server, Client &client, std::vector<std::string> &tokens);
 void	cmdBot(Server &server, Client &client, std::vector<std::string> &tokens);
-
+void	cmdTopic(Server &server, Client &client, std::vector<std::string> &tokens);
 std::vector<std::string>	splitString(std::string s, char sep);
 
 #endif

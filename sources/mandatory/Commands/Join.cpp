@@ -64,7 +64,7 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 			server.sendToClient(client, RPL_TOPIC(client.getNickName(), channels[i], channel->getTopic().getTopic()) + "\r\n");
 			server.sendToClient(client, RPL_TOPICWHOTIME(client.getNickName(), channels[i], channel->getTopic().getAuthor()->getNickName(), (channel->getTopic().getTopicTimeString())) + "\r\n");
 		}
-		server.sendToClient(client, RPL_NAMEREPLY(client.getNickName(), "=", channels[i], channel->getMembers()) + "\r\n");
-		server.sendToClient(client, RPL_ENDOFNAMES(client.getNickName(), channels[i]) + "\r\n");
+		server.sendToClient(client, RPL_NAMEREPLY(client.getNickName(), "=", channels[i], channel->getMembers()));
+		server.sendToClient(client, RPL_ENDOFNAMES(client.getNickName(), channels[i]));
 	}
 }

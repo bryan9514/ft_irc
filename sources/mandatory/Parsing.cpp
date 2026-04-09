@@ -67,8 +67,8 @@ void	handleCmd(Server & server, Client & client, std::string & line)
 		cmdJoin(server, client, tokens);
 	else if (cmd == "KICK")
 	 	cmdKick(server, client, tokens);
-	// else if (cmd == "TOPIC")
-	// 	cmdTopic(server, client, tokens);
+	else if (cmd == "TOPIC")
+		cmdTopic(server, client, tokens);
 	else if (cmd == "INVITE")
 	 	cmdInvite(server, client, tokens);
 	else if (cmd == "MODE")

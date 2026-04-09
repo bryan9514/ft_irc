@@ -84,6 +84,7 @@ class Channel
 
 		ChannelRules	getRules(void) const;
 		Topic			getTopic(void) const;
+		Topic&			getCpTopic(void);
 
 		bool		isFull(void) const;
 };

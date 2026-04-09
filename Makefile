@@ -38,6 +38,7 @@ M_SOURCES	:=  main.cpp \
 				Commands/Pass.cpp \
 				Commands/Privmsg.cpp \
 				Commands/Quit.cpp \
+				Commands/cmdTopic.cpp \
 				SplitString.cpp \
 				Commands/User.cpp \
 				Channel.cpp \
