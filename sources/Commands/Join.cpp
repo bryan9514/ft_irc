@@ -6,7 +6,7 @@
 /*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/28 12:18:15 by ntome             #+#    #+#             */
-/*   Updated: 2026/04/10 11:20:05 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/10 15:57:17 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 		if (channel->getRules().getInviteOnly() && !channel->IsInvitedbyName(client.getNickName())) {
 			printMyMsg(ERROR, "JOIN", "ERROR", "Invite only channel ", client.getFdClient());
 			controlErrors(server, client, ERR_INVITEONLYCHAN, "JOIN");
+			server.sendToClient(client, ERR_INVITEONLYCHAN(client.getNickName(), channels[i]) + "\r\n");
 			continue;
 		}
 		if (channel->getRules().getPassword() != "" && (i >= (int)keys.size() || keys[i] != channel->getRules().getPassword())) {
