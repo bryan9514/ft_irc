@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot_bonus.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ntome <ntome@42angouleme.fr>               +#+  +:+       +#+        */
+/*   By: ntome <ntome@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 12:01:42 by ntome             #+#    #+#             */
-/*   Updated: 2026/04/05 12:15:17 by ntome            ###   ########.fr       */
+/*   Updated: 2026/04/10 09:01:26 by ntome            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,5 @@ void	cmdBot(Server & server, Client & client, std::vector<std::string> & tokens)
 		server.broadcast(megaphon(tokens[i]), -1);
 		server.broadcast(" ",  -1);
 	}
+	server.broadcast("\r\n",  -1);
 }

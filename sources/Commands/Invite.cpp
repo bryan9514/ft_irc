@@ -34,6 +34,12 @@ void	cmdInvite(Server &server, Client &client, std::vector<std::string> &tokens)
 	std::string stdchan = tokens[2];
 	Channel *chan = server.getChannel(stdchan);
 	Client *target = findClientByNick(server, std_target);
+	if (!target)
+	{
+		printMyMsg(ERROR, "INVITE", "ERROR", "nick out of range or inexistant", client.getFdClient());
+		controlErrors(server, client, ERR_NOSUCHNICK, "INVITE", std_target);
+		return;
+	}
 	if (!chan)
 	{
 		printMyMsg(ERROR, "INVITE", "ERROR", "channel out of range or inexistant", client.getFdClient());
