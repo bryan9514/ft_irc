@@ -15,6 +15,11 @@ static Client *findClientByNick(Server &server, const std::string &nick)
 
 void	cmdInvite(Server &server, Client &client, std::vector<std::string> &tokens)
 {
+	if (!client.getRegistered())
+	{
+		printMyMsg(ERROR, "PRIVMSG", "Error", "client not registered", client.getFdClient());
+		return ; 
+	}
 	if (tokens.size() == 1)
 	{
 		std::vector<std::string> usr_invit = client.getInvitations();
@@ -26,7 +31,7 @@ void	cmdInvite(Server &server, Client &client, std::vector<std::string> &tokens)
 	}
 	if (tokens.size() == 2)
 	{
-		printMyMsg(ERROR, "INVITE", "ERROR", "", client.getFdClient());
+		printMyMsg(ERROR, "INVITE", "ERROR", "Need more params", client.getFdClient());
 		controlErrors(server, client, ERR_NEEDMOREPARAMS, "INVITE");
 		return;
 	}

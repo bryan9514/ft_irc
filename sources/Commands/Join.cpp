@@ -20,6 +20,11 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
 
+	if (!client.getRegistered())
+	{
+		printMyMsg(ERROR, "JOIN", "Error", "client not registered", client.getFdClient());
+		return ; 
+	}
 	if (tokens.size() < 2) {
 		printMyMsg(ERROR, "JOIN", "ERROR", "", client.getFdClient());
 		controlErrors(server, client, ERR_NEEDMOREPARAMS, "JOIN");
@@ -60,7 +65,6 @@ void	cmdJoin(Server & server, Client & client, std::vector<std::string> & tokens
 			channel->addOperator(&client);
 		channel->removeInvited(client.getRealName());
 		printMyMsg(SUCCESS, "JOIN", "Success", client.getNickName() + " is joining the channel " + channels[i], client.getFdClient());
-		server.sendToClient(client, RPL_JOIN(client.getNickName(), channels[i]) + "\r\n");
 		server.getChannel(channels[i])->broadcastToMembers(server, ":" + client.getNickName() + " JOIN " + channels[i] + "\r\n");
 		if (channel->getTopic().getIsSet()) {
 			server.sendToClient(client, RPL_TOPIC(client.getNickName(), channels[i], channel->getTopic().getTopic()) + "\r\n");

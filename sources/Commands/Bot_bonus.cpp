@@ -23,8 +23,13 @@ std::string	megaphon(std::string s)
 
 void	cmdBot(Server & server, Client & client, std::vector<std::string> & tokens)
 {
+	if (!client.getRegistered())
+	{
+		printMyMsg(ERROR, "BOT", "Error", "client not registered", client.getFdClient());
+		return ; 
+	}
 	if (tokens.size() < 2) {
-		printMyMsg(ERROR, "BOT", "ERROR", "", client.getFdClient());
+		printMyMsg(ERROR, "BOT", "ERROR", "Need more params", client.getFdClient());
 		controlErrors(server, client, ERR_NEEDMOREPARAMS, "BOT");
 		return ;
 	}

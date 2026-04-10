@@ -38,6 +38,11 @@ static std::string findChannelMode(Channel *target)
 **/
 void  cmdMode(Server &server, Client &client, std::vector<std::string> &tokens)
 {
+	if (!client.getRegistered())
+	{
+		printMyMsg(ERROR, "MODE", "Error", "client not registered", client.getFdClient());
+		return ; 
+	}
 	if ((int)tokens.size() < 2)
 	{
 		printMyMsg(ERROR, "MODE", "ERROR", "missing argument", client.getFdClient());

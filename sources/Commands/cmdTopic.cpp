@@ -5,6 +5,11 @@
 
 void	cmdTopic(Server &server, Client &client, std::vector<std::string> &tokens)
 {
+	if (!client.getRegistered())
+	{
+		printMyMsg(ERROR, "TOPIC", "Error", "client not registered", client.getFdClient());
+		return ; 
+	}
 	if (tokens.size() < 2)
 	{
 		printMyMsg(ERROR, "TOPIC", "ERROR", "Need More Params", client.getFdClient());
